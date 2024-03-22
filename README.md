@@ -12,6 +12,6 @@ In this course, we cover the following topics:
 6. Categorical Data - Bar Plots
 7. Numerical Cross-Sectional Data - Histograms, Tree Maps
 8. Time Series Data - Line and Area Charts and Path Plots
-9. Geospatial Data = Choropleth Maps
+9. Geospatial Data - Choropleth Maps
 10. Others - Leaflet
 
