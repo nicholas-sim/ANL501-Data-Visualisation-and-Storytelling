@@ -2,8 +2,8 @@ This repository contains my class materials for ANL501 Data Visualisation and St
 
 In this course, we employ R to construct data visualizations. Before we take a dive into ggplots, we first cover some intro to R:
 
-$${\color{blue}Introduction to R Programming}$$
-  
+**Introduction to R Programming**
+ 
 1. Getting Started with R - Basic Operations
 2. Getting Started with R - Programming
 3. Data Management with Base R
@@ -12,7 +12,7 @@ $${\color{blue}Introduction to R Programming}$$
 
 After an overview on ggplots, we explore how to construct various visualizations for different data types. These visualizations are:
 
-$${\color{blue}Constructing Data Visualizations}$$
+**Constructing Data Visualizations**
 
 6. Categorical Data - Bar Plots
 7. Numerical Cross-Sectional Data - Histograms, Tree Maps
