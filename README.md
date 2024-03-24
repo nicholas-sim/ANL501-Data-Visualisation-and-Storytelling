@@ -1,4 +1,8 @@
-![Dengue Clusters in Singapore](dengue.png)
+Using the Reticulate Package for Data Scraping            |  Visualizing Dengue Clusters with Leaflet
+:-------------------------:|:-------------------------:
+![Using the Reticulate Package](islands.png)  |  ![Dengue Clusters in Singapore](dengue.png)
+
+
 
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
 
@@ -11,7 +15,7 @@ In this course, we employ R to construct data visualizations. Before we take a d
 1. Data Management with Base R
 1. Data Management with Tidyverse
    
-![Using the Reticulate Package](islands.png)
+
 
 After an overview on ggplots, we explore how to construct various visualizations for different data types. These visualizations are:
 
