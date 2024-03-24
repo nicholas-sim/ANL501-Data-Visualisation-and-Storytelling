@@ -1,4 +1,4 @@
-	![Dengue Clusters in Singapore](https://github.com/nicholas-sim/ANL501-Data-Visualisation-and-Storytelling/blob/main/dengue.png)
+	![Dengue Clusters in Singapore](dengue.png)
 
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
 
