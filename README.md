@@ -1,4 +1,8 @@
-![](islands.png) | ![](lifeexpectancy.png)
+
+
+Data Scraping from Wiki using Reticulate    |  Lollipop Chart on Life Expectancy
+:-------------------------:|:-------------------------:
+![](islands.png) |   ![](lifeexpectancy.png)
 
 
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
