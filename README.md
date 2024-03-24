@@ -1,8 +1,3 @@
-Using the Reticulate Package for Data Scraping            |  Visualizing Dengue Clusters with Leaflet
-:-------------------------:|:-------------------------:
-![Using the Reticulate Package](islands.png)  |  ![Dengue Clusters in Singapore](dengue.png)
-
-
 
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
 
