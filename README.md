@@ -10,7 +10,8 @@ In this course, we employ R to construct data visualizations. Before we take a d
 1. Getting Started with R - Programming
 1. Data Management with Base R
 1. Data Management with Tidyverse
-
+   
+![Using the Reticulate Package](islands.png)
 
 After an overview on ggplots, we explore how to construct various visualizations for different data types. These visualizations are:
 
