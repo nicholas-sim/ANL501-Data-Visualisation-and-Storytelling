@@ -1,3 +1,5 @@
+[Dengue Clusters in Singapore](https://github.com/nicholas-sim/ANL501-Data-Visualisation-and-Storytelling/blob/main/dengue.png)
+
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
 
 In this course, we employ R to construct data visualizations. Before we take a dive into ggplots, we first cover some intro to R:
