@@ -1,4 +1,4 @@
-![](islands.png)
+![](islands.png) :: ![](lifeexpectancy.png)
 
 
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
@@ -23,5 +23,5 @@ After an overview on ggplots, we explore how to construct various visualizations
 9. Geospatial Data - Choropleth Maps
 10. Others - Leaflet
 
-11. ![](lifeexpectancy.png)
+
 
