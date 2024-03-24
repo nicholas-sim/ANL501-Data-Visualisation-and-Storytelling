@@ -1,11 +1,15 @@
 
 
+
+
+This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
+
+
 Data Scraping from Wiki using Reticulate    |  Lollipop Chart on Life Expectancy
 :-------------------------:|:-------------------------:
 ![](islands.png) |   ![](lifeexpectancy.png)
 
 
-This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
 
 In this course, we employ R to construct data visualizations. Before we take a dive into ggplots, we first cover some intro to R:
 
