@@ -5,7 +5,7 @@ In this course, we employ R to construct data visualizations. Before we take a d
 
 **Introduction to R Programming**
  
-1. [Getting Started with R - Basic Operations](https://github.com/nicholas-sim/ANL501-Data-Visualisation-and-Storytelling/blob/main/seminar_1/Programming.html)
+1. Getting Started with R - Basic Operations
 1. Getting Started with R - Programming
 1. Data Management with Base R
 1. Data Management with Tidyverse
