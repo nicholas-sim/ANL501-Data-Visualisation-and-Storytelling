@@ -1,6 +1,10 @@
 <a href="https://nicholas-sim.github.io/" class="button"> Return to Home
 </a>
 
+<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="btn btn-primary btn-sm">
+  Seminar 1
+</a>
+
 
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
   <button type="button"  class="btn btn-secondary btn-sm"  style="color: white;">  Seminar 1  </button>
