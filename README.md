@@ -13,13 +13,8 @@ Data Scraping from Wiki using Reticulate    |  Lollipop Chart on Life Expectancy
 
 In this course, we employ R to construct data visualizations. Before we take a dive into ggplots, we first cover some intro to R:
 
-![**Introduction to R Programming**](https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/)
- 
-1. Getting Started with R - Basic Operations
-1. Getting Started with R - Programming
-1. Data Management with Base R
-1. Data Management with Tidyverse
-   
+<a style="font-weight:bold" href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Introduction to R Programming </a>
+
 
 After an overview on ggplots, we explore how to construct various visualizations for different data types. These visualizations are:
 
