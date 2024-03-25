@@ -11,7 +11,7 @@
 <a class="btn btn-primary" href="#" role="button">Seminar 6 </a>
 
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
-  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 1  </button>
+  <button type="button" style="color: white;">  Seminar 1  </button>
 </a>
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class="button">
   <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 2  </button>
