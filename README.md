@@ -1,3 +1,22 @@
+<head>
+<style>
+.button {
+  background-color: #008CBA; 
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+
+
 
 <a href="https://nicholas-sim.github.io/" class="button">
   <button type="button" class="btn btn-outline-primary">  Homepage  </button>
