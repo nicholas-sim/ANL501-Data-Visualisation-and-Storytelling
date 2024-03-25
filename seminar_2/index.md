@@ -13,3 +13,8 @@ In this seminar, we will acquire skills in data frame manipulation using both ba
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/grammarofgraphics"> Principles of Data Storytelling and the Grammar of Graphics </a>
 
 
+
+
+<br>
+
+<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a> | <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a> 
