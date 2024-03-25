@@ -15,10 +15,10 @@ In this course, we employ R to construct data visualizations. The course introdu
 
 Before we take a dive into ggplots, we first cover some intro to R:
 
-<a style="font-weight:bold" href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Introduction to R Programming </a>
+**Introduction to R Programming**
 
-1. R Operations
-2. R Programming
+1. R Operations [<a style="font-weight:bold" href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]
+2. R Programming [<a style="font-weight:bold" href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]
 3. Data Management in Base R
 4. Data Management in Tidyverse
 5. Principles of the Grammar of Graphics
