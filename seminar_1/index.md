@@ -12,3 +12,4 @@ This discussion data types, the combine functions, vectors and matrices, array i
 The discussion first begins with the concept of a list. Then, it covers basic programming fundamentals related to flow controls and function writing. For flow controls we cover the _for_ statement, the if, _else if_ and _else_ statements, and _while_ statements. For functions, we explore the standard syntax and documentations for writing functions with multiple inputs and outputs.
 
 
+<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/practices"> Suggested Practices in Data Storytelling </a>
