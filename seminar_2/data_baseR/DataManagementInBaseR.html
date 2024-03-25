@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Management in Base R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nicholas Sim" />
+    <meta name="date" content="2024-01-09" />
+    <script src="DataManagementInBaseR_files/header-attrs-2.24/header-attrs.js"></script>
+    <link href="DataManagementInBaseR_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="DataManagementInBaseR_files/panelset-0.2.6/panelset.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Management in Base R
+]
+.author[
+### Nicholas Sim
+]
+.date[
+### 09 January 2024
+]
+
+---
+
+
+
+
+
+
+
+
+
+# Topics
+
+1. Useful functions for working with data: 
+    * `str()` (to check data structure), 
+    * `head()` (to see the first few rows), 
+    * `summary()` (to construct summary statistics), 
+    * `table()` (to tabulate) 
+    * `data.frame()` (to construct data frames from matrix/vectors)
+    * `names()` (to assign names to vector elements)
+    * `colnames()` (to assign names to columns)
+    * `rownames()` (to assign names to rows)
+
+2. Variable referencing symbol `$`  e.g.  `weather.df$days`
+
+3. Subsetting by index selection, e.g. `weather.df[weather.df$temp &gt; 30,]`
+
+4. Referencing element(s) in the matrix e.g. 
+    + `weather.df[2,3]` 
+    + `weather.df[2,c('days','rain')]` 
+    + `weather.df['temp']`
+
+
+---
+# Topics
+
+5. Subsetting function `subset()` e.g. 
+    + `subset(weather.df, rain==TRUE &amp; temp&lt;30)`
+
+6. Membership operator `%in%`  e.g. 
+    + `iris$Species %in% c("versicolor", "virginica")`
+
+7. Order function `order()` e.g. 
+    + `order(weather.df['temp'])`
+  
+8. Merge function `merge()`
+
+9. Removing missing data `omit.na()`  
+
+10. Working with strings
+
+
+---
+class: center, middle, inverse
+# The Data Frame
+
+---
+### The Data Frame
+
+Before implementing data analysis, we need to first organize our data into a **data frame**. 
+
+Here, we will go over some data management tools in base R. Later,  we will learn how to manage data using the `dplyr` package from the `tidyverse` library.
+
+A data frame is simply data organized as rows and columns, where the rows represent observations and the columns represent variables.
+
+A data frame looks like a matrix, except that a matrix is merely a collection of elements of the same type. Thus, unlike a matrix, a data frame may contain variables (i.e. columns) of different types (e.g. numerical values, strings, factors).
+
+Subsetting rules for matrices apply to data frames as well. However, there are convenient functions for subsetting data frames, such as the `subset()` function, that enable us to construct subsets based on more general conditions.
+
+
+---
+### Useful Functions for Exploring a Data Frame 
+
+The following are useful functions for describing data frames:
+
+* `head()` - print out the first 6 rows of the data frame
+
+* `str()` - print out the structure of a data frame, which tells us what the variables are such as the variables' names and types
+
+* `summary()`  - get a quick statistical summary of all the variables (i.e. columns) of a data frame. 
+* `names()`  - extract the names of the columns (see, also, `colnames()`)
+
+* `table()` - tabulating the values in a factor variable
+
+As an example, let's consider the dataset `mtcars`, which comes with base R (type `data()` to see the list of built-in datasets).
+
+
+---
+### The `head()` function
+
+
+To explore first few rows of `mtcars`, we use the `head()` function, which returns the first 6 rows of `mtcars`:
+
+```r
+head(mtcars)
+```
+
+```
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+```
+
+
+
+---
+### The `str()` Function
+
+To see the type of the variables we have in our dataset, we use the structure function `str()`.
+
+
+```r
+str(mtcars)
+```
+
+```
+## 'data.frame':	32 obs. of  11 variables:
+##  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
+##  $ disp: num  160 160 108 258 360 ...
+##  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec: num  16.5 17 18.6 19.4 17 ...
+##  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
+##  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+##  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
+##  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...
+```
+The output shows that all the variables are numeric. 
+
+
+---
+### The `summary()` Function  
+
+To summarize the variables in `mtcars`, we use the `summary()` function:
+
+
+```r
+summary(mtcars)
+```
+
+```
+##       mpg             cyl             disp             hp       
+##  Min.   :10.40   Min.   :4.000   Min.   : 71.1   Min.   : 52.0  
+##  1st Qu.:15.43   1st Qu.:4.000   1st Qu.:120.8   1st Qu.: 96.5  
+##  Median :19.20   Median :6.000   Median :196.3   Median :123.0  
+##  Mean   :20.09   Mean   :6.188   Mean   :230.7   Mean   :146.7  
+##  3rd Qu.:22.80   3rd Qu.:8.000   3rd Qu.:326.0   3rd Qu.:180.0  
+##  Max.   :33.90   Max.   :8.000   Max.   :472.0   Max.   :335.0  
+##       drat             wt             qsec             vs        
+##  Min.   :2.760   Min.   :1.513   Min.   :14.50   Min.   :0.0000  
+##  1st Qu.:3.080   1st Qu.:2.581   1st Qu.:16.89   1st Qu.:0.0000  
+##  Median :3.695   Median :3.325   Median :17.71   Median :0.0000  
+##  Mean   :3.597   Mean   :3.217   Mean   :17.85   Mean   :0.4375  
+##  3rd Qu.:3.920   3rd Qu.:3.610   3rd Qu.:18.90   3rd Qu.:1.0000  
+##  Max.   :4.930   Max.   :5.424   Max.   :22.90   Max.   :1.0000  
+##        am              gear            carb      
+##  Min.   :0.0000   Min.   :3.000   Min.   :1.000  
+##  1st Qu.:0.0000   1st Qu.:3.000   1st Qu.:2.000  
+##  Median :0.0000   Median :4.000   Median :2.000  
+##  Mean   :0.4062   Mean   :3.688   Mean   :2.812  
+##  3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:4.000  
+##  Max.   :1.0000   Max.   :5.000   Max.   :8.000
+```
+
+
+---
+### The `names()` Function
+
+To find the names of all variables, we use the `names()` function
+ 
+
+```r
+names(mtcars)
+```
+
+```
+##  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
+## [11] "carb"
+```
+
+
+---
+### The `table()` Function
+
+The `table()` function is useful for tabulating factor variables. Let's consider the `iris` dataset. 
+
+```r
+head(iris,3)
+```
+
+```
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+```
+
+
+```r
+str(iris)
+```
+
+```
+## 'data.frame':	150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...
+```
+
+
+There are 3 numeric variables and 1 factor variable called `Species` (Column 5). 
+
+---
+### The `table()` Function
+
+
+To see what the levels of  `Species` are, we tabulate it using the `table()` function:
+
+
+```r
+table(iris[,5])
+```
+
+```
+## 
+##     setosa versicolor  virginica 
+##         50         50         50
+```
+
+
+---
+class: center, middle, inverse
+#  Creating a Data Frame
+
+---
+### Using the `data.frame()` Function
+
+Vectors can be combined into a data frame using the `data.frame()` function. 
+
+
+```r
+# Create the following vectors
+days &lt;- c('Mon','Tue','Wed','Thu','Fri')
+temp &lt;- c(31.2,27.3,28.7, 32.5, 33.8)
+rain &lt;- c(TRUE, TRUE, TRUE, FALSE, FALSE)
+
+# Pass in the vectors and assign the values to the dataframe named weather.df:
+weather.df &lt;- data.frame(days,temp,rain)
+weather.df # Notice that the column names are already defined here.
+```
+
+```
+##   days temp  rain
+## 1  Mon 31.2  TRUE
+## 2  Tue 27.3  TRUE
+## 3  Wed 28.7  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+---
+### Using the `data.frame()` Function
+
+To explore the structure of `df`, we use the `str()` function:
+
+```r
+str(weather.df)
+```
+
+```
+## 'data.frame':	5 obs. of  3 variables:
+##  $ days: chr  "Mon" "Tue" "Wed" "Thu" ...
+##  $ temp: num  31.2 27.3 28.7 32.5 33.8
+##  $ rain: logi  TRUE TRUE TRUE FALSE FALSE
+```
+which shows that `days` is a character vector, `temp` is a numerical vector, and `rain` is a logical vector.
+
+
+---
+### Converting a Vector or Matrix into a Data Frame 
+
+A vector or matrix can be converted into a data frame using the `as.data.frame()` function. 
+ 
+Let's generate a vector named `precip` containing daily precipitation records in inches, with values 1.2, 7.6, 8.3, 0.8, 0.2 for Monday to Friday. 
+
+Let's convert it into a data frame and save the output using the same name.
+
+
+```r
+precip &lt;- c(1.2, 7.6, 8.3, 0.8, 0.2)
+precip &lt;- as.data.frame(precip) 
+precip
+```
+
+```
+##   precip
+## 1    1.2
+## 2    7.6
+## 3    8.3
+## 4    0.8
+## 5    0.2
+```
+
+
+---
+### Exercise
+
+1. Create a vector called `humidity`, which represents the percentage of moisture in the air, with the values of 62.4, 96.3, 97.6, 73.2,	55.3 for Monday to Friday. 
+
+2. Declare it as a data frame.
+
+3. Combine `precip` and `humidity` with the `weather.df` data frame using the `data.frame()` function. Call it `weather.df.2`. 
+
+
+
+
+---
+class: center, middle, inverse
+#  Selection and Indexing
+
+
+---
+###  Selection and Indexing
+
+Elements referencing and indexing follow the same approach for a data frame as for a matrix. For example, to filter out (i.e. select) the first row of `weather.df` (while keeping all the column elements) 
+
+
+```r
+# Everything from first row. Notice the column argument is empty.
+weather.df[1,] #use square brackets
+```
+
+```
+##   days temp rain
+## 1  Mon 31.2 TRUE
+```
+
+.pull-left[ 
+To select the second column of `weather.df` (while keeping all the row elements)
+
+```r
+#Everything from second column. Notice the row argument is empty.
+weather.df[,2]
+```
+
+```
+## [1] 31.2 27.3 28.7 32.5 33.8
+```
+]
+
+.pull-right[
+To see if it rained on Tuesday,
+
+```r
+weather.df[2,3]
+```
+
+```
+## [1] TRUE
+```
+ ]
+
+
+---
+### Omitting Row and Column Arguments in Index Referencing
+
+If we pass in an index without specifying the row and column arguments, this will, by default, reference a column. 
+
+.pull-left[
+For instance, the first column is referenced below:
+
+```r
+# Everything from first row
+weather.df[1] # Notice that we omit the comma here
+```
+
+```
+##   days
+## 1  Mon
+## 2  Tue
+## 3  Wed
+## 4  Thu
+## 5  Fri
+```
+]
+.pull-right[
+And the second column is selected below:
+
+```r
+#Everything from second column
+weather.df[2]
+```
+
+```
+##   temp
+## 1 31.2
+## 2 27.3
+## 3 28.7
+## 4 32.5
+## 5 33.8
+```
+]
+
+
+---
+###  Selecting using Column Names in the Column Argument
+
+If the column names are specified, we may select the columns their names. 
+
+.pull-left[
+For instance, we can select Column 3 by passing in its name, `rain`: 
+
+```r
+weather.df[2,'rain']
+```
+
+```
+## [1] TRUE
+```
+]
+.pull-right[
+As another example, to display the values for `day` and `rain` for Tuesday, we filter out the second row and select the `days` and `rain` columns:
+
+
+```r
+weather.df[2,c('days','rain')]
+```
+
+```
+##   days rain
+## 2  Tue TRUE
+```
+]
+
+---
+###  Selecting Variables Using Column Names without Row-Column Index Referencing
+
+If we pass a variable name into the index brackets, the variable will be returned as an output. 
+
+.pull-left[
+For instance, let's first use the `names()` function to retrieve the names of all variables in `weather.df`.
+
+
+```r
+names(weather.df)
+```
+
+```
+## [1] "days" "temp" "rain"
+```
+]
+.pull-right[
+Let's pass `'temp'` into the brackets without the row-column index referencing:
+
+
+```r
+weather.df['temp'] # Without using row and column arguments, the column will be selected by default.
+```
+
+```
+##   temp
+## 1 31.2
+## 2 27.3
+## 3 28.7
+## 4 32.5
+## 5 33.8
+```
+]
+
+
+---
+###  Excluding Variables in the Selection
+
+We may use the negation "`-`" symbol to select all variables except the one negated. 
+
+.pull-left[
+For example, to select all columns except Column 3, we pass in -3 into the column argument of `weather.df`:
+
+
+```r
+weather.df[,-3]
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+## 4  Thu 32.5
+## 5  Fri 33.8
+```
+]
+
+.pull-right[
+We may also leave out the comma, and not specify the row and column argument when referencing. By default, this will select all columns except Column 3 (as well as all the row elements).
+
+```r
+weather.df[-3]
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+## 4  Thu 32.5
+## 5  Fri 33.8
+```
+]
+
+
+---
+###  Selecting Variables Using `$` Referencing  
+
+A data frame is an R list that can contain different data types. Thus, we may reference a variable in a data frame using the "`$`" symbol, like how we reference an item in a list. 
+
+.pull-left[
+For example, we may select `days`, `temp` and `rain` from the `weather.df` data frame by
+
+```r
+weather.df$days
+```
+
+```
+## [1] "Mon" "Tue" "Wed" "Thu" "Fri"
+```
+
+```r
+weather.df$temp
+```
+
+```
+## [1] 31.2 27.3 28.7 32.5 33.8
+```
+
+```r
+weather.df$rain
+```
+
+```
+## [1]  TRUE  TRUE  TRUE FALSE FALSE
+```
+]
+.pull-right[
+**Note**:  The difference between `weather.df['temp']` and `weather.df$temp` is that the former returns a data frame (i.e. in a column) while the latter returns a vector.
+
+**Note**: We use the "`$`" symbol to reference an item in a list. The data frame is a special type of list and which therefore enable us to use "`$`" for referencing. By contrast, a matrix is not a list. Thus, the "`$`" referencing approach will not work.
+
+]
+
+
+
+
+
+---
+###  Exercise
+
+The formula to convert temperature from degrees Celsius into degrees Fahrenheit is `\((X°C × 9/5) + 32\)`, where `\(X\)` is the temperature in degrees Celsius. 
+
+Convert `temp` in `weather.df` to degrees Fahrenheit and save it as `temp.F`. Combine `temp.F` with the data frame `weather.df` and call it `weather.df.3`. 
+
+Next, type in `names(weather.df.3)[2]`. What do you observe? Rename `temp` as `"temp.C"`. (Hint: Assign the new name to `names(weather.df.3)[2]`)
+
+
+
+
+
+
+
+---
+class: center, middle, inverse
+#  Subsetting 
+
+---
+###  Subsetting 
+
+Subsetting is the creation of a smaller dataset from the original dataset by selecting the rows (observations), the columns (variables), or both.
+
+**Filtering** refers to *extracting observations* from the data frame using one or more conditions as filters.
+
+**Selecting** refers to *extracting variables* from the data frame.
+
+
+---
+###  Filtering using Comparison Operators
+
+Let's extract observations from `weather.df` based on the condition that temperature is greater than `\(30°C\)`.
+
+
+```r
+filter.df &lt;- weather.df$temp &gt; 30
+filter.df # Vector of TRUE/FALSE
+```
+
+```
+## [1]  TRUE FALSE FALSE  TRUE  TRUE
+```
+
+```r
+weather.df[filter.df,]
+```
+
+```
+##   days temp  rain
+## 1  Mon 31.2  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+We have created a vector of logical values called `filter.df`, which contains the values `TRUE`, `FALSE`, `FALSE`, `TRUE`, `TRUE`, i.e. the  1st, 4th and 5th elements are `TRUE`. 
+
+This implies that `temp` is greater than `\(30°C\)` in the  1st, 4th and 5th elements of `weather.df$temp`, i.e. on Monday, Thursday, and Friday.
+
+`filter.df` acts as a selector that identifies the elements in `weather.df$temp` where `temp` is greater than `\(30°C\)`. To select the  1st, 4th and 5th rows of `weather.df`, where `temp` is greater than `\(30°C\)`, we pass  `filter.df` into the row argument of `weather.df`. 
+
+
+
+
+---
+###  Example
+
+Rather than creating a selector vector, we may pass the selector condition `weather.df$temp &gt; 30` directly into the row argument of `weather.df` to create a subset that contains only the days where temperature has exceeded `\(30°C\)`:
+
+
+```r
+weather.df[weather.df$temp &gt; 30,]
+```
+
+```
+##   days temp  rain
+## 1  Mon 31.2  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+In the above, we select the rows in `weather.df` where `temp` is greater `\(30°C\)`, and keep all columns. To save the subset, just assign it to a new object:
+
+
+```r
+weather.df.hot &lt;- weather.df[weather.df$temp &gt; 30,]
+```
+
+
+
+---
+###  Example 
+
+We may filter out the days that rained. To do so, we pass the condition `weather.df$rain == TRUE` into the row argument
+
+
+```r
+weather.df[weather.df$rain == TRUE,]
+```
+
+```
+##   days temp rain
+## 1  Mon 31.2 TRUE
+## 2  Tue 27.3 TRUE
+## 3  Wed 28.7 TRUE
+```
+
+The above reads as "select the rows in `weather.df` where `rain` is `TRUE`, and keep all columns"
+
+
+
+---
+###  Combining Filtering Conditions
+
+We may create subsets that satisfy two or more conditions. These conditions may be combined using the conjunctions "AND" and "OR". 
+
+
+The conjunction "AND" means that both conditions must be met for the joint condition to be `TRUE`. The conjunction "OR" means that either one of the conditions must be met for the condition to be `TRUE`. 
+
+
+In R, the "AND" conjunction is represented by the ampersand `&amp;`. The "OR" conjunction is represented by the vertical pipe `|`.
+
+
+---
+###  Example
+
+Let's filter out the data when the temperature was hot (i.e. temperature greater than `\(30°C\)`) **AND** rainy. To do so, we pass the joint condition `weather.df$temp &gt; 30 &amp; weather.df$rain == TRUE` into the **row** argument of the `weather.df` data frame
+
+
+```r
+weather.df[weather.df$temp &gt; 30 &amp; weather.df$rain == TRUE,]
+```
+
+```
+##   days temp rain
+## 1  Mon 31.2 TRUE
+```
+
+
+---
+###  Example
+
+Next, let's filter out the days when the temperature was hot (i.e. temperature greater than `\(30°C\)`) **OR** when it rained. To do so, we pass the joint condition `weather.df$temp &gt; 30 | weather.df$rain == TRUE` into the **row** argument of `weather.df`
+
+
+
+```r
+weather.df[weather.df$temp &gt; 30 | weather.df$rain == TRUE,]
+```
+
+```
+##   days temp  rain
+## 1  Mon 31.2  TRUE
+## 2  Tue 27.3  TRUE
+## 3  Wed 28.7  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+Here, we recover the entire dataset because each day was either hot (i.e. Thursday, Friday), or rainy (i.e. Tuesday, Wednesday), or both (i.e. Monday).
+
+
+---
+###  Selecting
+
+.pull-left[
+Filtering refers to the extraction of rows/observations. Selecting refers to the extraction of columns/variables. 
+
+To select columns, just pass the column indices or column names into the data frame. 
+
+Note: 
+  * `weather.df[,'temp']` means "keep all rows and select the column `temp`".
+  * `weather.df[,c(1,2)]` means "keep all rows and select the 1st and 2nd columns".
+]
+
+.pull-right[
+
+```r
+weather.df[,'temp']
+```
+
+```
+## [1] 31.2 27.3 28.7 32.5 33.8
+```
+
+```r
+weather.df[,c('days','temp')]
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+## 4  Thu 32.5
+## 5  Fri 33.8
+```
+
+```r
+weather.df[,c(1,2)]
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+## 4  Thu 32.5
+## 5  Fri 33.8
+```
+]
+
+---
+###  Combining Filtering and Selecting
+
+Finally, we may combine filtering (the observations) and selecting (the variables).
+
+For example, let's extract the days that rained and keep only the variables `days` and `temp`:
+
+
+```r
+weather.df[weather.df$rain == TRUE, c('days','temp')] #use the combine function
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+```
+
+Notice that we merely called the name of the variables `days` and `temp` when we passed them into the column argument of `weather.df`. 
+
+However, to refer to the `rain` variable in the row argument, we must make a reference to the data frame, i.e.  `weather.df$rain`. 
+
+
+---
+###  Common Pitfall in Conditional Filtering
+
+Why must we spell out the condition `weather.df$rain == TRUE` in the row argument with the name of the data frame, and not simply use `'rain' == TRUE`?
+
+This because to filter out a desired observation, a boolean value, `TRUE`, must be present in the row argument of the data frame *for that specific row*.
+
+The problem with passing in the condition `'rain' == TRUE` is that the string character, `'rain'`, is not equal to `TRUE`! Therefore, `'rain' == TRUE`  will return `FALSE`.
+
+By contrast, `weather.df$rain` references the variable `rain`, which is a boolean vector. Therefore, for the  rows in `weather.df$rain` that contain the value `TRUE`, a `TRUE` value will be returned for the rows where the condition `weather.df$rain == TRUE` is met. 
+
+
+---
+###  Common Pitfall in Column Referencing
+
+For column referencing, we pass in the column name or column index only. If we reference the data frame, for instance, `weather.df$temp`, it will be wrong, e.g.
+
+`weather.df[weather.df$rain == TRUE, weather.df$temp]`
+
+This is because `weather.df$temp` is a vector of temperature values, i.e.  31.2, 27.3, 28.7,  32.5, 33.8. 
+
+By passing `weather.df$temp` into the column argument, you are attempting to retrieve columns 31.2, 27.3, 28.7,  32.5, 33.8 from `weather.df`, which is incorrect!
+
+
+
+---
+###  Exercise
+
+Using `weather.df.2`, create a subset (i.e. select the rows) where precipitation is more than 2 inches.
+
+
+
+
+---
+###  Filtering using `subset()` 
+
+In base R, subsetting requires us to write codes like
+
+
+```r
+weather.df[weather.df$temp &gt; 30 &amp; weather.df$rain == TRUE,]
+```
+
+```
+##   days temp rain
+## 1  Mon 31.2 TRUE
+```
+
+
+Instead of passing in a set of logicals into the row argument, we may use the `subset()` command to perform conditional filtering. The `subset()` function has 3 inputs: 
+
+
++ Input 1: Name of the data frame
++ Input 2: The subsetting condition(s)
++ Input 3: The columns we want to select (Optional)
+
+
+---
+###  Example 
+
+Suppose we want to grab the days that had rained. We may use the `subset()` function as follows:
+
+
+```r
+subset(weather.df, subset = rain==TRUE)
+```
+
+```
+##   days temp rain
+## 1  Mon 31.2 TRUE
+## 2  Tue 27.3 TRUE
+## 3  Wed 28.7 TRUE
+```
+
+For the subsetting condition above, we simply pass in `rain==True` and not `weather.df$rain==True`. This is because we have declared `weather.df` as the data frame in the first input. Therefore, it is understood that the `rain` variable is from the `weather.df` data frame.
+
+That being said, you may write the code as 
+
+
+```r
+subset(weather.df, subset = weather.df$rain==TRUE)`
+```
+
+The code works but is unnecessarily long. This is also not recommended as you may unintentionally select a variable from a different data frame! 
+
+
+
+---
+###  Example 
+Once you are aware that the second input of `subset()` specifies the subsetting condition(s), there is no need to declare input name, i.e. `subset = `. For example, the following code will work just as fine:
+
+
+```r
+subset(weather.df, rain==TRUE) # omit "subset = " in the second argument
+```
+
+```
+##   days temp rain
+## 1  Mon 31.2 TRUE
+## 2  Tue 27.3 TRUE
+## 3  Wed 28.7 TRUE
+```
+
+---
+###  Subsetting with Joint Conditions
+
+We may combine subsetting conditions using `&amp;`  (i.e. and) or `|` (i.e. or) and include the combined conditions in the `subset()` function. For example, let's add another condition, `temp &lt; 30` into the function:
+
+
+```r
+subset(weather.df, rain==TRUE &amp; temp&lt;30)
+```
+
+```
+##   days temp rain
+## 2  Tue 27.3 TRUE
+## 3  Wed 28.7 TRUE
+```
+
+ 
+---
+###  Subsetting with Joint Conditions
+The `subset()` function has a third input that allows us to select variables. For example, let's select the 'days' and 'temperature' for the days that rained.
+
+
+```r
+subset(weather.df, rain==TRUE, select = c(days, temp))
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+```
+
+Again, once we are aware that the third input involves selecting the columns, we may drop `select = ` and pass in `c(days, temp)` only&gt;
+
+
+```r
+subset(weather.df, rain==TRUE, c(days, temp)) # No argument names at all.
+```
+
+```
+##   days temp
+## 1  Mon 31.2
+## 2  Tue 27.3
+## 3  Wed 28.7
+```
+
+Notice that we did not wrap `days` and `temp` with quotation marks. This is because R knows that these are names of variables in `weather.df` and therefore "tolerates" this omission. 
+
+
+
+---
+###  The `%in%` Operator
+
+The `%in%`, or membership, operator generates a Boolean indicator to indicate if values in a variable belong to a list of pre-specified values. 
+
+For example, the variable `iris$Species`  contains three species,  "setosa", "versicolor", "virginica". To choose a subset (call it `iris.small`) containing only "versicolor", "virginica" (i.e. "versicolor" and "virginica" are contained in `Species`), we may pass 
+
+
+`Species %in% c("versicolor", "virginica")`
+
+
+into the subsetting argument in `subset()`, which means `Species` **containing** `c("versicolor", "virginica")`. 
+
+---
+###  Example
+
+Let's compare using the base R command versus the `subset()` function for subsetting. 
+
+In base R, to choose the observations that correspond to the "versicolor" or  "virginica" species, we will write 
+
+
+```r
+iris.small.1 &lt;- iris[iris$Species == "versicolor" | iris$Species =="virginica",]
+head(iris.small.1)
+```
+
+```
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 51          7.0         3.2          4.7         1.4 versicolor
+## 52          6.4         3.2          4.5         1.5 versicolor
+## 53          6.9         3.1          4.9         1.5 versicolor
+## 54          5.5         2.3          4.0         1.3 versicolor
+## 55          6.5         2.8          4.6         1.5 versicolor
+## 56          5.7         2.8          4.5         1.3 versicolor
+```
+
+---
+###  Example
+
+Using the `subset()` function and the `%in%` operator, we may achieve the same with
+
+
+```r
+iris.small.2 &lt;- subset(iris, Species %in% c("versicolor", "virginica"))
+head(iris.small.2)
+```
+
+```
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 51          7.0         3.2          4.7         1.4 versicolor
+## 52          6.4         3.2          4.5         1.5 versicolor
+## 53          6.9         3.1          4.9         1.5 versicolor
+## 54          5.5         2.3          4.0         1.3 versicolor
+## 55          6.5         2.8          4.6         1.5 versicolor
+## 56          5.7         2.8          4.5         1.3 versicolor
+```
+
+The above command reads something like: construct a subset from `iris` where  `Species` contains the elements "versicolor" and "virginica".
+
+
+---
+###  Exercise
+
+1. Using the `subset()` command, create a subset from `weather.df.2` where precipitation is more than 2 inches.
+
+
+2.  Use the `mtcars` dataset. Using the `subset()` command and the `%in%` operator, create a subset where  "cyl" contains 4 and 6 (note these are numbers, not strings). 
+
+
+3.  Use the `mtcars` dataset. Using the `subset()` command and the `%in%` operator, create a subset containing the variables "mpg",  "cyl" and "disp", where  "cyl" contains 4 and 6. 
+
+
+
+
+---
+class: center, middle, inverse
+#  Other Useful Functions
+
+---
+###  Other Useful Functions
+
+We explore two commonly used functions:
+  
+  1. `order()`: for sorting observations by a certain attribute
+
+  2. `na.omit()`: for removing missing values
+
+
+---
+###  Sorting the Observations 
+
+We may sort the data frame by using the `order()` function. To do so, we
+
+      1) pass the variable you wish to sort the data frame by into the `order()` function. This will produce an index vector containing the order of the observations in the variable. 
+      2) pass this index vector into the row argument of the data frame to be reordered.
+    
+
+---
+###  Example
+
+Let's sort `weather.df` by the temperature:
+
+
+```r
+sorted.temp &lt;- order(weather.df['temp'])
+sorted.temp
+```
+
+```
+## [1] 2 3 1 4 5
+```
+
+```r
+weather.df[sorted.temp,]
+```
+
+```
+##   days temp  rain
+## 2  Tue 27.3  TRUE
+## 3  Wed 28.7  TRUE
+## 1  Mon 31.2  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+Let's take a look at what is happening here. 
+
+The first object, `sorted.temp`, generates an index of the (ascending) order of the elements in `temp`. Here, the lowest temperature took place on Wednesday (i.e. Element 3); the second lowest temperature took place on Monday (i.e. Element 1), and so on.  
+
+Then, by passing `sorted.temp` into the row argument of `weather.df`, we may sort the rows of `weather.df` according to the index in `sorted.temp`, i.e. `2 3 1 4 5`, so that Row 1 becomes Row 2, Row 2 becomes Row 3, Row 3 becomes Row 1, and so on.
+
+
+---
+###  Example
+
+
+Note: We may also use the variable selector "`$`"
+
+
+```r
+sort.temp &lt;- order(weather.df$temp)
+weather.df[sort.temp,]
+```
+
+```
+##   days temp  rain
+## 2  Tue 27.3  TRUE
+## 3  Wed 28.7  TRUE
+## 1  Mon 31.2  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+---
+###  Sort by Descending Order 
+
+To sort by descending order of temperature, we prefix `weather.df['temp']` with a negative sign: 
+
+```r
+desc.temp &lt;- order(-weather.df['temp'])
+weather.df[desc.temp,]
+```
+
+```
+##   days temp  rain
+## 5  Fri 33.8 FALSE
+## 4  Thu 32.5 FALSE
+## 1  Mon 31.2  TRUE
+## 3  Wed 28.7  TRUE
+## 2  Tue 27.3  TRUE
+```
+
+
+
+---
+###  Remark
+
+There are other ways of sorting a dataset using libraries, which we will explore later. One library we will be using frequently is the `tidyverse` library, which loads a package called `dplyr`, among others. 
+
+The `arrange()` function in the `dplyr` package enables us to sort a data frame easily. Thus, there is no need to generate a vector of order index, and then, use it to sort a data frame as we have done earlier.
+
+
+
+```r
+dplyr::arrange(weather.df, temp)
+```
+
+```
+##   days temp  rain
+## 1  Tue 27.3  TRUE
+## 2  Wed 28.7  TRUE
+## 3  Mon 31.2  TRUE
+## 4  Thu 32.5 FALSE
+## 5  Fri 33.8 FALSE
+```
+
+
+
+---
+###  Exercise
+
+Sort `weather.df.2` in ascending order based on `precip`:
+
+
+
+
+
+---
+###  Removing Missing Values (NA)
+
+Missing values in the data frame are represented by `NA`. To remove rows containing NA from a data frame, we pass the data frame into the `na.omit()` function.
+
+**Note**: It is not always a good idea to use `na.omit()` to remove missing values. This is because the `na.omit()` will omit a row if it contains an `NA`, regardless whether is there only one `NA` in that row or many `NA`s. Therefore, `omit.na()` may remove non-missing data that could be useful for future analysis.
+
+
+
+---
+###  Exercise
+
+Create a vector called `v.1` with the numbers 1 to 4, NA, NA, 5 to 9 using the combine function. Calculate the mean of `v.1` by passing it into `mean()`. What do you observe?
+
+Now, using `na.omit()`, remove the `NA`s from `v.1` and save the output as `v.2`. Then, calculate the mean of `v.2`. What is it?
+
+
+
+
+---
+class: center, middle, inverse
+#  Working with Strings
+
+
+---
+### Common String Operations
+
+Often, we need to manipulate string values in our data frame. The following are commonly encountered scenarios in string manipulations:
+
+1. Recoding string values
+
+2. Concatenating string values
+
+3. Replacing a section in a string
+
+
+---
+### Recoding String Values
+
+We may use the `ifelse()` function to recode strings. Later in the course, we will explore the `recode()` function from the `dplyr` package to do the same. 
+
+The `ifelse()` function has three inputs:
+
+    (1) the condition to be tested
+    (2) the specified value if the condition is true
+    (3) the specified value if the condition is false
+
+As an example, suppose we wish to abbreviate the species names in `iris` from "setosa" to "SE", "virginica" to "VA", and "versicolor" to "VE". 
+
+
+
+---
+### Example
+
+The codes below recodes one string expression at a time using the `ifelse()` function: 
+
+
+
+
+```r
+#save the iris data into iris.df
+iris.df &lt;- iris 
+summary(iris.df$Species) #summarize the `Species` variable
+```
+
+```
+##     setosa versicolor  virginica 
+##         50         50         50
+```
+
+```r
+# Recode "setosa" into "SE", and save the output
+iris.df$Species.Short1 &lt;- ifelse(iris.df$Species == "setosa", "SE",iris.df$Species) 
+
+# Recode "virginica" into "VA", and save the output
+iris.df$Species.Short1 &lt;- ifelse(iris.df$Species == "virginica", "VA", iris.df$Species.Short1) 
+
+# Recode "versicolor" into "VE", and save the output
+iris.df$Species.Short1 &lt;- ifelse(iris.df$Species == "versicolor", "VE", iris.df$Species.Short1)
+
+# Check the output
+summary(as.factor(iris.df$Species.Short1))
+```
+
+```
+## SE VA VE 
+## 50 50 50
+```
+
+
+
+
+
+---
+### Example
+
+We may recode all values in a single line by nesting the `ifelse()` function iteratively into the "otherwise" (i.e. 3rd) argument. As a remark, there are better ways to recode the values in a variable such as using `recode()` from `dplyr`.
+
+
+```r
+#save the iris data into iris.df
+iris.df &lt;- iris 
+
+# Save the recoded variables into Species.Short
+iris.df$Species.Short2 &lt;- ifelse(iris.df$Species == "setosa", "SE", 
+                                 ifelse(iris.df$Species == "virginica", "VA", 
+                                        ifelse(iris.df$Species == "versicolor", "VE", iris.df$Species)))
+```
+
+---
+### String Concatenation
+
+To concatenate two or more strings using a single space separator, we may use the `paste()` function. To do the same without a default space separator, we may use the `paste0()` function. 
+
+.left-pull[ 
+To use a specific separator than a single space, we specify the separator in the `sep = "your separator"` option.
+]
+
+.right-pull[
+
+```r
+# a single separating space by default
+paste("Hello", "World")
+```
+
+```
+## [1] "Hello World"
+```
+
+```r
+# no default separating space 
+paste0("Hello", "World") 
+```
+
+```
+## [1] "HelloWorld"
+```
+
+```r
+# specifying the separator
+paste("Hello", "World", sep ="") 
+```
+
+```
+## [1] "HelloWorld"
+```
+
+```r
+# specifying the separator, @
+paste("Hello", "World", sep ="@")
+```
+
+```
+## [1] "Hello@World"
+```
+]
+
+You may pass in a vector of strings into the `paste()` and `paste0()` functions.
+
+
+
+
+---
+### Replacing a Section in a String 
+
+We may replace a section of a string, called a **substring**. For example, if the species names are "setosa flower", "virginica flower" and "versicolor flower", then " flower" (with a leading space) is redundant and should be removed (i.e. replace with a blank). 
+
+To do so, we may use the `gsub()` function, which has the syntax structure:
+
+`gsub(pattern to be replaced, replacement, the expression/variable to apply the replacement on)`
+
+Accompanying the `gsub()` function is the `sub()` function, which replaces only the first instance.
+
+
+---
+### Example
+
+Below, we use the `gsub()` function to remove the word "flower" from the variable `iris.df$Species.Long`:
+
+
+```r
+iris.df$Species.Long &lt;- paste(iris.df$Species,"flower") # appending "flower" to iris.df$Species
+iris.df$Species.Original &lt;- gsub(" flower", "", iris.df$Species) # replace " flower" with "" in iris.df$Species
+
+head(iris.df[c('Species.Long','Species.Original')])
+```
+
+```
+##    Species.Long Species.Original
+## 1 setosa flower           setosa
+## 2 setosa flower           setosa
+## 3 setosa flower           setosa
+## 4 setosa flower           setosa
+## 5 setosa flower           setosa
+## 6 setosa flower           setosa
+```
+
+
+
+---
+### Further Remarks
+
+Other commonly encountered tasks in string manipulation include replacing the names of a certain label, textwrapping of titles or axis labels, etc. 
+
+String manipulation in R deserves a separate discussion. In base R, working with strings can be challenging. An easier way is to use functions from the `stringr` package, which is part of the `tidyverse` library.
+
+The link below summarizes some useful commands in `stringr` and their counterparts in base R.
+
+https://stringr.tidyverse.org/articles/from-base.html
+
+
+
+
+---
+### Exercise
+
+Construct the following vectors
+
+    * `name` with "Graham", "Lily", "Rose"
+    * `gender` with "M", "F", "F"
+    * `salutation` with  "Mr","Madam", "Madam"
+    * `address` with "Forfar Ave", "Clarence St", "Dawson Ave"
+
+Construct a data frame called `df.records` using these vectors. 
+
+Check whose address has "Ave" and "St". 
+
+Rename "Ave" to "Avenue" and "St" to "Street". 
+
+Rename "Madam" to "Ms" within the variable `salutation`.
+
+Overwrite these changes in `df.records`. 
+
+
+
+
+
+---
+class: center, middle, inverse
+# R Packages
+
+---
+### Installing and Using R Packages
+
+Packages are a collection of programs to solve certain tasks conveniently. The repository for R packages is called CRAN, i.e. Comprehensive R Archive Network.
+
+For this course, we will be using the `tidyverse` library (package and library are synonymous in R). The package contains several sub-packages for data visualization, data wrangling, functional programming, etc.  
+
+For data visualization, we will be using the `ggplot2` package in the `tidyverse` library. Once we install and load `tidyverse`, the `ggplot2` package will be automatically loaded.
+
+For data management, the `dplyr` package in the `tidyverse` library is a powerful tool. We will return to `tidyverse` later in the course.
+
+
+
+---
+### Installing `tidyverse`
+Let's install and load the `tidyverse` package
+
+
+
+```r
+#install.packages("tidyverse")
+library(tidyverse)
+```
+The first line installs the `tidyverse` package (commented out as I have already installed the package). The second line loads `tidyverse` into R. This is necessary in order for us to use functions from `tidyverse`.
+
+
+
+---
+class: center, middle, inverse
+# Importing and Exporting Files into R
+
+---
+### Working Directory
+
+The working directory is the directory that you wish to access your files from without specifying the entire filepath. For our convenience, it will be a good idea to declare where the working directory is.
+
+To check the existing working directory, use the `getwd()` command. 
+
+
+```r
+getwd()
+```
+
+```
+## [1] "C:/Users/nicho/OneDrive/Documents/Teaching/ANL501/Course Content/course_notes/current/Seminar 2"
+```
+
+To specify the working directory, use the `setwd()` command, e.g. 
+
+```r
+# setwd("C:\\Users\\nicholas\\Documents\\Learning\\rstudio\\Seminar2") # PC users
+# setwd("/Users/nicholas/Documents/Learning/rstudio/Seminar2")  # Mac Users
+```
+(I commented out the command as the directory is only an example.) Notice that a double backslash `\\` is used instead of a single backslash `\`, which represents an `escape` (to escape a symbol or a sign, which is used to represent something in R). An alternative to `\\` is a single forward slash `/`.
+
+
+
+---
+### Importing a Data Filie
+
+After setting the working directory, we may import the csv file `Seminar2_Data.csv` from the directory and save it as an object called `WDI.data`. 
+
+```r
+WDI.data &lt;- read.csv("Seminar2_Data.csv")
+```
+This dataset is constructed from the World Bank World Development Indicators. 
+
+Notice that the entire file path is omitted in `read.csv()` as  `Seminar2_Data.csv` is in the working directory.
+
+
+---
+### Checking the Imported File 
+
+It is a good practice to first explore the dataset after importing it. We first look at the structure of our data by using the `str()` command.
+
+
+```r
+str(WDI.data)
+```
+
+```
+## 'data.frame':	5425 obs. of  10 variables:
+##  $ Country.Code                                                       : chr  "ABW" "ABW" "ABW" "ABW" ...
+##  $ Country.Name                                                       : chr  "Aruba" "Aruba" "Aruba" "Aruba" ...
+##  $ Year                                                               : int  1995 1996 1997 1998 1999 2000 2001 2002 2003 2004 ...
+##  $ GDP.growth..annual...                                              : num  2.55 1.19 7.05 1.99 1.24 ...
+##  $ GDP.per.capita..constant.2010.US..                                 : num  26705 26088 27191 27152 26954 ...
+##  $ GINI.index..World.Bank.estimate.                                   : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ Mortality.rate..under.5..per.1.000.live.births.                    : num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ Poverty.headcount.ratio.at..1.90.a.day..2011.PPP.....of.population.: num  NA NA NA NA NA NA NA NA NA NA ...
+##  $ Income.Group                                                       : chr  "High income" "High income" "High income" "High income" ...
+##  $ Region                                                             : chr  "Latin America &amp; Caribbean" "Latin America &amp; Caribbean" "Latin America &amp; Caribbean" "Latin America &amp; Caribbean" ...
+```
+
+Notice that this data frame has  "5425 obs. of 19 variables". As discussed, each variable can be referenced by their name by using the "`$`" symbol. 
+
+---
+### Checking the Imported File 
+
+For example, to reference the variable `Country.Code`, we write the code
+
+
+
+We may summarize our data by using the `summary()` function. For instance, let's summarize GDP growth
+
+
+```r
+summary(WDI.data$GDP.growth)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+## -62.076   1.625   3.745   3.818   6.003 149.973     639
+```
+
+
+---
+### Tidying Up Our Data 
+
+As the column names are very long, it is good idea to rename them into something simpler. To do so, let's check the column names of `WDI.data` first. Then, we re-assign simpler names to the columns.
+
+To rewrite the variable names from Columns 1 to 8 in `WDI.data`, we use the function `colnames()` or `names()`
+
+
+```r
+# Let's overwrite the column names of `WDI.data}
+
+colnames(WDI.data)[1:8]&lt;- c("Code", "Country", "Year", "GDP.Growth", "GDP.PerCap", "Gini", "Child.Mortality", "Poverty.Under.2" )
+
+colnames(WDI.data) # much better!
+```
+
+```
+##  [1] "Code"            "Country"         "Year"            "GDP.Growth"     
+##  [5] "GDP.PerCap"      "Gini"            "Child.Mortality" "Poverty.Under.2"
+##  [9] "Income.Group"    "Region"
+```
+
+
+
+---
+### Exporting Our Data File
+
+Let's export `WDI.data` back into our working directory using the `write.csv()` function from base R. The first input of `write.csv()` takes in the name of the data frame we want to export. The second argument specifies the name of the file to be exported.
+
+For instance, the following command 
+
+
+```r
+write.csv(WDI.data, "Seminar2_Data2.csv")
+```
+exports the data frame `WDI.data` as "`Seminar2_Data2.csv`" into the working directory.
+
+The exported csv file will contain a new column containing row numbers  (i.e. which are row names) in "`Seminar2_Data2.csv`". To prevent R from creating a new column of row names, we use the option `row.names=FALSE`.
+
+
+```r
+write.csv(WDI.data, "Seminar2_Data2.csv", row.names  = FALSE)
+```
+
+Another way to avoid generating row names as a new variable in the exported dataset is to use the `write_csv()` function (notice the underscore) that comes from the `readr` package of `tidyverse`.
+
+
+---
+### Exercise
+
+Generate a vector `vec.1` using a sequence from 1 to 10. Generate another vector `vec.2` using the first 10 elements of `letters`.
+
+Column combine `vec.1` and `vec.2` and call the output `df`. Assign column names "Numbers" and "Letters" to the first and second column respectively.
+
+Export `df` as a csv file named "`Seminar2_last_exercise.csv`" to your working directory and exclude row names.
+
+To verify that you have successfully exported `df`, go to your working directory and open "`Seminar2_last_exercise.csv`". 
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
