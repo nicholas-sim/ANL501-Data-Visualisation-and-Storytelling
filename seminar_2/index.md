@@ -9,7 +9,7 @@ Establishing a solid foundation in R programming entails comprehending data fram
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/data_tidyverse">  Data Management with Tidyverse </a>
 
 
-<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/grammarofgraphics"> Principles of Data Storytelling and the Grammar of Graphics </a>
+<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/grammarofgraphics"> Principles of Data Storytelling and the Grammar of Graphics </a>
 
 
 
