@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Suggested Practices in Data Storytelling</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nicholas Sim" />
+    <meta name="date" content="2024-01-09" />
+    <script src="DataStorytellingPractices_files/header-attrs-2.24/header-attrs.js"></script>
+    <link href="DataStorytellingPractices_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="DataStorytellingPractices_files/panelset-0.2.6/panelset.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Suggested Practices in Data Storytelling
+]
+.author[
+### Nicholas Sim
+]
+.date[
+### 09 January 2024
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+class: center, middle, inverse
+# Introduction
+
+---
+### General Advice
+
+Ref: Nussbaumer-Knaflic (2015)
+
+**1.** Understand the context 
+  * What is the background issue? What data are available? 
+
+**2.** Choose an appropriate display
+  * How many variables are involved? Which "geom" to use?
+
+**3.** Eliminate clutter 
+  * How to maximize the data-to-ink ratio? Which aspects in a figure can be done away?
+
+---
+### General Advice
+
+**4.** Draw attention where you want it 
+  * How should we apply the color/fill aesthetics? Should we annotate, use labels, and how should we display them?
+
+**5.** Think like a designer
+  * Which themes? Which overall look should we used? Are the figures visually appealing? 
+
+**6.** Tell a story 
+
+---
+class: center, middle, inverse
+# Useful Visualisations
+
+---
+### Useful Visualisations
+
+We will consider various data visualisations throughout the course. Here are some useful suggestions for data storytelling.
+
+1. Text
+
+2. Table
+
+3. Slopegraph/Dumbbell Plot
+
+4. Waterfall Chart 
+
+---
+### Text 
+
+Is a bar chart needed? 
+
+&lt;img src="children1.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+### Text 
+
+Consider instead:
+
+&lt;img src="children2.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+### Tables
+
+Use minimal/light borders:
+
+
+&lt;img src="table_borders.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Tables
+
+
+Heatmap to provide visual cues:
+
+&lt;img src="table_heatmap.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Slopegraphs/Dumbbell Plot
+
+Slopegraphs or dumbbell plots are useful for telling a before-and-after story using percentages:
+
+&lt;img src="slopegraph1.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+### Slopegraphs/Dumbbell Plot
+
+Using a color as a visual cue:
+
+&lt;img src="slopegraph2.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Waterfall Chart
+
+A waterfall chart can be used to breakdown a stacked bar chart. It can also be used for showing the events that happened in between a starting and finishing point:
+
+&lt;img src="waterfall.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: center, middle, inverse
+# Visuals to Avoid 
+
+
+---
+### Avoid: Pie Charts
+
+  * Difficult to gauge the area size.
+  * Difficult to gauge the differences in areas.
+
+&lt;img src="piechart.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Avoid: Donut charts
+
+Same reasons as pie charts.
+
+&lt;img src="DataStorytellingPractices_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### Avoid: Secondary y-axis
+
+&lt;img src="yaxis.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+### Avoid: Secondary y-axis
+
+Separate the series:
+
+&lt;img src="yaxis2.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+### Avoid: Unnecessary clutter 
+
+&lt;img src="clutter1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+### Avoid: Chart Border and Gridlines
+
+Border and gridlines are removed.
+
+&lt;img src="clutter2.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Avoid: Unnecessary Data Markers
+
+Data markers are removed to display clean trend lines.
+
+&lt;img src="clutter4.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+### Avoid: Unnecessary Data Markers
+
+The series are labeled directly.
+
+&lt;img src="clutter5.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+### Avoid: Using Inconsistent Colors 
+
+Consistent colors are used for both trend lines and labels.
+
+&lt;img src="clutter6.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+class: center, middle, inverse
+# Preattentive Attributes
+
+---
+### Why are Preattentive Attributes Important?
+
+The **preattentive attributes** of a figure are visual features that capture our attention before we consciously pay attention to it.
+
+Preattentive attributes can help direct your audiences' attention to where you want them to focus it.
+
+They may also be used to create a visual hierarchy of elements to lead your audience through the information you want to communicate in the way you want them to process it.
+
+Preattentive attributes can be overlaid on the figure by using size, color, or text.
+
+
+---
+### Colors 
+
+* Use colors to your advantage, but sparingly. E.g. You may use color as a fill aesthetic but not everything needs to be represented by its own color. 
+
+* Use striking colors to highlight important information, and grey colors for less important data.
+
+* Be aware that about 8 percent of the population are color blind to various degrees. You may wish to use colors that are color-blind friendly. See http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+
+
+---
+### Colors
+
+&lt;img src="pew1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+### Colors
+
+&lt;img src="pew2.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Annotation
+
+* Use text and annotation to deliver a clear visual message.
+
+Ticket volume over time:
+
+&lt;img src="line1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+### Annotation
+
+Cleaner figure but context unclear:
+
+&lt;img src="line2.png" width="60%" style="display: block; margin: auto;" /&gt;
+    
+                      
+---
+### Annotation
+
+Recommendation as a punchline:
+
+&lt;img src="line3.png" width="60%" style="display: block; margin: auto;" /&gt;
+                           
+---
+class: center, middle, inverse
+# Examples
+
+---
+### Use Colors
+
+Use colors to create a visual hierarchy of text
+
+&lt;img src="preattentive1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### No Visual Cues
+
+The message is difficult to see.
+
+&lt;img src="preattentive2.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+### Use Colors 
+
+Use colors to emphasize top concerns.
+
+&lt;img src="preattentive3.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Further Color Differentiation 
+
+Use color differentiation to emphasize on a specific issue.
+
+&lt;img src="preattentive4.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: center, middle, inverse
+# Leveraging Animation 
+
+
+---
+### Why Animation? 
+
+When presenting content in a live setting, we want to be able to walk your audience through the story, focusing on just the relevant part of the visual. 
+
+Moreover, we may use animation to show or highlight only the data that is relevant to the specific point being made as we present.
+
+
+---
+### A Standard Presentation 
+
+For example, assume you work for a company that makes online social games. You are interested in telling the story around how active users for a given game — Moonville — have grown over time.  A standard presentation might look like this:
+
+&lt;img src="animation0.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+## Leveraging Animation 
+
+Let's leverage animation as we present.
+
+.panelset[
+.panel[.panel-name[Launch]
+&lt;img src="animation1.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Feedback]
+&lt;img src="animation2.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Growth]
+&lt;img src="animation3.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Stabilize]
+&lt;img src="animation4.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Growth]
+&lt;img src="animation5.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Overall]
+&lt;img src="animation6.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
