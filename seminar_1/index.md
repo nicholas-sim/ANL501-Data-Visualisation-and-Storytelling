@@ -2,14 +2,6 @@
 </a>
 
 
-
-<a class="btn btn-primary" href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" role="button">Seminar 1 </a>
-<a class="btn btn-primary" href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" role="button">Seminar 2 </a>
-<a class="btn btn-primary" href="#" role="button">Seminar 3 </a>
-<a class="btn btn-primary" href="#" role="button">Seminar 4 </a>
-<a class="btn btn-primary" href="#" role="button">Seminar 5 </a>
-<a class="btn btn-primary" href="#" role="button">Seminar 6 </a>
-
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
   <button type="button"  class="btn btn-secondary btn-sm"  style="color: white;">  Seminar 1  </button>
 </a>
