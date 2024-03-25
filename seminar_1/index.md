@@ -1,3 +1,8 @@
+Navigate to Seminar: <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class = "button" > 1 </a>,   <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class = "button" > 2 </a> 
+
+---
+
+
 ## Seminar 1
 
 Here is the <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/introduction"> overview </a> of the course. By the end of the course, students will become proficient (with effort) in using R for data cleaning, data visualisation, and writing reproducible reports using RMarkdown. As stucents are not expected to have prior knowledge in R, we will start off with the basics in R operations and progtamming.
@@ -18,7 +23,3 @@ This discussion is based Cole Nussbaum-Knaflic's book <a href="https://www.story
 
 
 
-
-<br>
-
-<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class = "button" > Seminar 1 </a>  <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class = "button" > Seminar 2 </a> 
