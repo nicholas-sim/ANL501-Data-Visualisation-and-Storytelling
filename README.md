@@ -1,5 +1,4 @@
 <head>
-<style>
 .button {
   background-color: #008CBA; 
   border: none;
@@ -12,7 +11,6 @@
   margin: 4px 2px;
   cursor: pointer;
 }
-</style>
 </head>
 
 
