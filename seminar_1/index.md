@@ -1,4 +1,4 @@
-Navigate to Seminar: <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class = "button" > 1 </a>,   <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class = "button" > 2 </a> 
+<small> Navigate to Seminar: <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class = "button" > 1 </a>,   <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class = "button" > 2 </a>  </small>
 
 ---
 
