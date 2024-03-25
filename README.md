@@ -1,6 +1,6 @@
 <a style="font-weight:bold" href="https://nicholas-sim.github.io/"> Return to Home Page</a>
 
-
+> "_A most gruesome and nerve-racking assignment to finish as my last module with SUSS in exchange for the master's certificate_"  (Anonymous) 
 
 This repository contains my class materials for ANL501 Data Visualisation and Storytelling offered by the Master of Analytics and Visualisation.
 
