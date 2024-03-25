@@ -1,6 +1,21 @@
-<a href="https://nicholas-sim.github.io/"> Return to Home Page</a>
+<style>
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; /* Button color */
+  color: #fff; /* Text color */
+  text-decoration: none; /* Remove underline */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Show hand cursor on hover */
+}
 
-<a href=""https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> <button type="button" class="btn btn-outline-primary">Seminar 1</button></a>
+.button:hover {
+  background-color: #0056b3; /* Darker button color on hover */
+}
+</style>
+
+<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">Seminar 1</a>
 
 
 My favorite student feedback: 
