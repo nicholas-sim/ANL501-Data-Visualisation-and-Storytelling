@@ -1,14 +1,14 @@
 <a href="https://nicholas-sim.github.io/" class="button">
-  <button type="button" class="btn btn-outline-primary">  Homepage  </button>
+  <button type="button" class="btn btn-outline-success">  Homepage  </button>
 </a>
 
 
 
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
-  <button type="button" class="tn-outline-info">  Seminar 1  </button>
+  <button type="button" class="btn btn-outline-info">  Seminar 1  </button>
 </a>
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class="button">
-  <button type="button" class="tn-outline-info">  Seminar 2  </button>
+  <button type="button" class="btn btn-outline-info">  Seminar 2  </button>
 </a>
 
 ## Seminar 1
