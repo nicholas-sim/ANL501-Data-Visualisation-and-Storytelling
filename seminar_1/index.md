@@ -10,6 +10,20 @@
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class="button">
   <button type="button" class="btn btn-outline-info btn-sm">  Seminar 2  </button>
 </a>
+<a href="#" class="button">
+  <button type="button" class="btn btn-outline-info btn-sm">  Seminar 3  </button>
+</a>
+<a href="#" class="button">
+  <button type="button" class="btn btn-outline-info btn-sm">  Seminar 4  </button>
+</a>
+<a href="#" class="button">
+  <button type="button" class="btn btn-outline-info btn-sm">  Seminar 5  </button>
+</a>
+<a href="#" class="button">
+  <button type="button" class="btn btn-outline-info btn-sm">  Seminar 6  </button>
+</a>
+
+
 
 ## Seminar 1
 
