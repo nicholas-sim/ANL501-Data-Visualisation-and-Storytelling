@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-outline-primary"> <a href="https://nicholas-sim.github.io/" class="button"> Homepage </a>  </button>
+<a href="https://nicholas-sim.github.io/" class="button"> <button type="button" class="btn btn-outline-primary">  Homepage  </button></a>  
 
 
 
