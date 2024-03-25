@@ -17,4 +17,4 @@ In this seminar, we will acquire skills in data frame manipulation using both ba
 
 <br>
 
-<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a> | <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a> 
+<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a> :: <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a> 
