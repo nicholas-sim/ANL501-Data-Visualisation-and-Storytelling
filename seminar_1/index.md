@@ -15,3 +15,10 @@ The discussion first begins with the concept of a list. Then, it covers basic pr
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/practices"> Suggested Practices in Data Storytelling </a>
 
 This discussion is based Cole Nussbaum-Knaflic's book <a href="https://www.storytellingwithdata.com/"> Storytelling with Data </a>. Here, we explore several key considerations when constructing a data visualization for storytelling, such as the reduction of clutter, carful use of colors, paying attention to preattentive attributes, among others. 
+
+
+
+
+<br>
+
+<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a> :: <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a> 
