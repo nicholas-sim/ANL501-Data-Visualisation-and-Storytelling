@@ -1,7 +1,6 @@
 ## Introduction to R
 This is the introduction to R programming. There are two parts: Operations and Programming.
 
----
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/operations">  Operations </a>
 
