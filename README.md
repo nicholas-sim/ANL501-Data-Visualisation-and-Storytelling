@@ -35,11 +35,12 @@ In this course, we employ R to construct data visualizations. The course introdu
 10. Plotting Trends and Time Series: Line Charts, Area Charts, Path Plots
 11. Plotting Geospatial Data: Choropleth Maps
 
-**Other Issues**
+**Other Topics**
 
 12. RMarkdown for Reproducible Report for Analytics
-13. Interactive Geospatial Plots with Leaflet
-14. Webscrapping with API
+13. Integrating Python with R using Reticulate 
+14. Interactive Geospatial Plots with Leaflet
+15. Webscrapping with API
 
 
 
