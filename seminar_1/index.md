@@ -1,26 +1,25 @@
-<a href="https://nicholas-sim.github.io/" class="button">
-  <button type="button" class="btn btn-outline-success">  Homepage  </button>
+<a href="https://nicholas-sim.github.io/" class="button"> Return to Home
 </a>
 
-
+--
 
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
-  <button type="button" class="btn btn-dark btn-sm" style="color: white;">  Seminar 1  </button>
+  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 1  </button>
 </a>
 <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class="button">
-  <button type="button" class="btn btn-dark btn-sm" style="color: white;">  Seminar 2  </button>
+  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 2  </button>
 </a>
 <a href="#" class="button">
-  <button type="button" class="btn btn-dark btn-sm" style="color: white;">  Seminar 3  </button>
+  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 3  </button>
 </a>
 <a href="#" class="button">
-  <button type="button" class="btn btn-dark btn-sm" style="color: white;">  Seminar 4  </button>
+  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 4  </button>
 </a>
 <a href="#" class="button">
-  <button type="button" class="btn btn-dark btn-sm" style="color: white;">  Seminar 5  </button>
+  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 5  </button>
 </a>
 <a href="#" class="button">
-  <button type="button" class="btn btn-dark btn-sm" style="color: white;">  Seminar 6  </button>
+  <button type="button" class="btn btn-primary btn-sm" style="color: white;">  Seminar 6  </button>
 </a>
 
 
