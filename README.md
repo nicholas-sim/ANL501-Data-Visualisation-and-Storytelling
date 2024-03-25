@@ -3,8 +3,12 @@
   <button type="button" class="btn btn-outline-primary">  Homepage  </button>
 </a>
 
-
-<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">Seminar 1</a>
+<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
+  <button type="button" class="btn btn-outline-primary">  Seminar 1  </button>
+</a>
+<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class="button">
+  <button type="button" class="btn btn-outline-primary">  Seminar 2  </button>
+</a>
 
 
 My favorite student feedback: 
