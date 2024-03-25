@@ -13,7 +13,7 @@ Data Scraping from Wiki using Reticulate    |  Lollipop Chart on Life Expectancy
 
 
 
-In this course, we employ R to construct data visualizations. The course introduction can be found here [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]. Although no prerequisites are required for the course, it would be helpful for students in this course to have some exposure to programming. Nonetheless, before we take a deep dive into data visualizations, we will first introduce R and get everyone up to speed with working and manipulating data frames. The course is roughly divided into the following sections:
+In this course, we employ R to construct data visualizations. The course introduction can be found here [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]. Although no prerequisites are required for the course, it would be helpful for students to have some exposure to programming. Nonetheless, before we take a deep dive into data visualizations, we will first introduce R and get everyone up to speed with working and manipulating data frames, a critical step before we plot. The course is roughly divided into the following sections:
 
 **Introduction to R Programming**
 
