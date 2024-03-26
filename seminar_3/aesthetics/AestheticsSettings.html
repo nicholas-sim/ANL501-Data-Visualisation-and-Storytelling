@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Aesthetics and Settings</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nicholas Sim" />
+    <meta name="date" content="2024-03-26" />
+    <script src="AestheticsSettings_files/header-attrs-2.24/header-attrs.js"></script>
+    <link href="AestheticsSettings_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="AestheticsSettings_files/panelset-0.2.6/panelset.js"></script>
+    <script src="AestheticsSettings_files/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+    <link href="AestheticsSettings_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="AestheticsSettings_files/datatables-binding-0.29/datatables.js"></script>
+    <script src="AestheticsSettings_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <link href="AestheticsSettings_files/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="AestheticsSettings_files/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="AestheticsSettings_files/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
+    <link href="AestheticsSettings_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="AestheticsSettings_files/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Aesthetics and Settings
+]
+.author[
+### Nicholas Sim
+]
+.date[
+### 26 March 2024
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+class: center, middle, inverse
+# Introduction
+
+---
+### Topics 
+
+* Aesthetics such as `color`, `fill`, `shape`, and `size`
+
+* Setting vs Aesthetic
+
+* Passing a setting into `aes()` (common mistake)
+
+* Set colors, size, etc.
+
+---
+### Required Libraries
+
+
+```r
+library(tidyverse)
+library(gapminder)
+```
+---
+class: center, middle, inverse
+# Aesthetic 
+
+---
+### What is an Aesthetic?
+
+Ref: Chapter3 KH
+
+An aesthetic is a mapping of one or more variables from a data frame to some elements in a visualisation.
+
+Some aesthetics are mandatory. For instance, we must specify the variable to be shown on the plot as an aesthetic. 
+
+Some aesthetics are optional, but are used to help create a visualisation that tells a sharper data story. Optional aesthetics include  `color`, `fill`, `shape`, and `size`.
+
+For this presentation, we will declare these optional aesthetics **locally** than globally, as we may not want them to be applied throughout our plot.
+
+
+---
+### The Color Aesthetic
+
+The **color** aesthetic controls the color of the border, such as the borders of the bars in a barplot. For a scatter plot, the color aesthetic can be used to change the color of the scatter points because by default, these points do not have a hollow interior (and thus, without an border).
+
+The `color` aesthetic is useful for distinguishing various categories in a qualitative variable. For instance, we may use the color aesthetic to differentiate the color of the scatter points for Asia, Europe, Sub-Saharan Africa, etc. or for males versus females, marital status, and so on, in a barplot.
+
+
+
+---
+### Example: The Color Aesthetic
+
+Using the `mtcars` data frame, let's plot miles per gallon against displacement (i.e. weight), and use the number of cylinders as a color aesthetic.
+
+
+
+```r
+mtcars$cyl &lt;- as.factor(mtcars$cyl) # change the class of cyl into factors
+ggplot(data = mtcars, mapping = aes (x = disp, y= mpg)) + 
+  geom_point(mapping = aes(color = cyl))
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/color.1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### The Fill Aesthestic
+
+In terms of applications, the **fill** aesthetic serves the same purpose as the `color` aesthetic.
+
+The main difference is that the `fill` aesthetic fills a &lt;span style="color:red"&gt;hollow interior&lt;/span&gt; with colors (representing a variable from the data frame), while the `color` aesthetic controls the color of the outline/border/exterior.
+
+For example, the bars in a barplot have a white hollow interior by default. To differentiate the bars with colors, we should use the `fill` aesthetic and not the `color` aesthetic.
+
+---
+### The Fill Aesthestic
+
+The `fill` aesthetic is usually used to differentiate colors in plots such as the histogram, bar chart, column chart, etc. where there are hollow interiors.
+
+By contrast, scatter points by default have a solid (i.e. non-hollow) interior. As such, the `color` aesthetic, not the `fill` aesthetic, should be utilized to differentiate the color of the scatter points.
+
+That being said, there could be scatter points with a hollow interior. If so, their colors should be differentiated by using the `fill` aesthetic.
+
+
+---
+### Example: The Fill Aesthetic
+
+Let's map the `fill` aesthetic to the number of cylinders. 
+
+
+```r
+ggplot(data = mtcars, mapping = aes (x = disp, y= mpg)) + 
+  geom_point(mapping = aes(fill = cyl))
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/fill.1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### The Shape and Size Aesthestics
+
+For a qualitative (categorical) variable, we may differentiate its values by using a `shape` aesthetic. The `shape` aesthetic differentiates the different values in a variable by using different shapes.  
+
+For a quantitative (numerical) variable, we may differentiate its values by using a `size` aesthetic. The `size` aesthetic differentiates different numerical values by using larger-sized displays for larger values.
+
+---
+### Example: The Shape Aesthetic
+
+Let's map the `shape` aesthetic to number of cylinders.
+
+
+
+```r
+ggplot(data = mtcars, mapping = aes (x = disp, y= mpg)) + 
+  geom_point(mapping = aes(shape = cyl))
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/shape.1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### Example: The Size Aesthetic
+
+Let's map the `size` aesthetic to the number of cylinders.
+
+
+```r
+ggplot(data = mtcars, mapping = aes (x = disp, y= mpg)) + 
+  geom_point(mapping = aes(size = cyl))
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/size.1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### Recap
+
+The `color`, `fill`, and `shape` aesthetics can be used to display information about classes (non-ordered categories).
+
+By contrast, the `size` aesthetic can only be used to display information about quantity.
+
+
+---
+### Exercise (Try on your own)
+
+Using the `iris` dataset, construct a scatter plot that plots sepal length against petal length.  Declare species as a *local* color aesthetic. Add an OLS regression line (without confidence bands) and use `theme_classic()`. You should observe the plot below. 
+
+Question: What happens if you declare species as a *global* color aesthetic?
+
+
+```
+## [1] "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"  "Species"
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: center, middle, inverse
+# Setting
+
+---
+### Setting versus Aesthetic
+
+Ref: Chapter 3 KH
+ 
+**Aesthetics** are characteristics on a plot (e.g.  `color`, `fill`, `shape`, and `size`) that are determined by some variables in the data frame.
+
+**Settings** are parameters that are not mapped to variables but determined by the user.
+
+For example, instead of differentiating the colors of the scatter points based on a variable in the data frame, we may set the colors of these points to, red, blue, etc.
+
+
+
+---
+###  The `iris` Dataset
+
+To elaborate this difference, let's use the `iris` dataset. Here is a quick look at the dataset
+
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5ec9acfa6e8f34a12c9c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5ec9acfa6e8f34a12c9c">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150"],[5.1,4.9,4.7,4.6,5,5.4,4.6,5,4.4,4.9,5.4,4.8,4.8,4.3,5.8,5.7,5.4,5.1,5.7,5.1,5.4,5.1,4.6,5.1,4.8,5,5,5.2,5.2,4.7,4.8,5.4,5.2,5.5,4.9,5,5.5,4.9,4.4,5.1,5,4.5,4.4,5,5.1,4.8,5.1,4.6,5.3,5,7,6.4,6.9,5.5,6.5,5.7,6.3,4.9,6.6,5.2,5,5.9,6,6.1,5.6,6.7,5.6,5.8,6.2,5.6,5.9,6.1,6.3,6.1,6.4,6.6,6.8,6.7,6,5.7,5.5,5.5,5.8,6,5.4,6,6.7,6.3,5.6,5.5,5.5,6.1,5.8,5,5.6,5.7,5.7,6.2,5.1,5.7,6.3,5.8,7.1,6.3,6.5,7.6,4.9,7.3,6.7,7.2,6.5,6.4,6.8,5.7,5.8,6.4,6.5,7.7,7.7,6,6.9,5.6,7.7,6.3,6.7,7.2,6.2,6.1,6.4,7.2,7.4,7.9,6.4,6.3,6.1,7.7,6.3,6.4,6,6.9,6.7,6.9,5.8,6.8,6.7,6.7,6.3,6.5,6.2,5.9],[3.5,3,3.2,3.1,3.6,3.9,3.4,3.4,2.9,3.1,3.7,3.4,3,3,4,4.4,3.9,3.5,3.8,3.8,3.4,3.7,3.6,3.3,3.4,3,3.4,3.5,3.4,3.2,3.1,3.4,4.1,4.2,3.1,3.2,3.5,3.6,3,3.4,3.5,2.3,3.2,3.5,3.8,3,3.8,3.2,3.7,3.3,3.2,3.2,3.1,2.3,2.8,2.8,3.3,2.4,2.9,2.7,2,3,2.2,2.9,2.9,3.1,3,2.7,2.2,2.5,3.2,2.8,2.5,2.8,2.9,3,2.8,3,2.9,2.6,2.4,2.4,2.7,2.7,3,3.4,3.1,2.3,3,2.5,2.6,3,2.6,2.3,2.7,3,2.9,2.9,2.5,2.8,3.3,2.7,3,2.9,3,3,2.5,2.9,2.5,3.6,3.2,2.7,3,2.5,2.8,3.2,3,3.8,2.6,2.2,3.2,2.8,2.8,2.7,3.3,3.2,2.8,3,2.8,3,2.8,3.8,2.8,2.8,2.6,3,3.4,3.1,3,3.1,3.1,3.1,2.7,3.2,3.3,3,2.5,3,3.4,3],[1.4,1.4,1.3,1.5,1.4,1.7,1.4,1.5,1.4,1.5,1.5,1.6,1.4,1.1,1.2,1.5,1.3,1.4,1.7,1.5,1.7,1.5,1,1.7,1.9,1.6,1.6,1.5,1.4,1.6,1.6,1.5,1.5,1.4,1.5,1.2,1.3,1.4,1.3,1.5,1.3,1.3,1.3,1.6,1.9,1.4,1.6,1.4,1.5,1.4,4.7,4.5,4.9,4,4.6,4.5,4.7,3.3,4.6,3.9,3.5,4.2,4,4.7,3.6,4.4,4.5,4.1,4.5,3.9,4.8,4,4.9,4.7,4.3,4.4,4.8,5,4.5,3.5,3.8,3.7,3.9,5.1,4.5,4.5,4.7,4.4,4.1,4,4.4,4.6,4,3.3,4.2,4.2,4.2,4.3,3,4.1,6,5.1,5.9,5.6,5.8,6.6,4.5,6.3,5.8,6.1,5.1,5.3,5.5,5,5.1,5.3,5.5,6.7,6.9,5,5.7,4.9,6.7,4.9,5.7,6,4.8,4.9,5.6,5.8,6.1,6.4,5.6,5.1,5.6,6.1,5.6,5.5,4.8,5.4,5.6,5.1,5.1,5.9,5.7,5.2,5,5.2,5.4,5.1],[0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.1,0.2,0.2,0.1,0.1,0.2,0.4,0.4,0.3,0.3,0.3,0.2,0.4,0.2,0.5,0.2,0.2,0.4,0.2,0.2,0.2,0.2,0.4,0.1,0.2,0.2,0.2,0.2,0.1,0.2,0.2,0.3,0.3,0.2,0.6,0.4,0.3,0.2,0.2,0.2,0.2,1.4,1.5,1.5,1.3,1.5,1.3,1.6,1,1.3,1.4,1,1.5,1,1.4,1.3,1.4,1.5,1,1.5,1.1,1.8,1.3,1.5,1.2,1.3,1.4,1.4,1.7,1.5,1,1.1,1,1.2,1.6,1.5,1.6,1.5,1.3,1.3,1.3,1.2,1.4,1.2,1,1.3,1.2,1.3,1.3,1.1,1.3,2.5,1.9,2.1,1.8,2.2,2.1,1.7,1.8,1.8,2.5,2,1.9,2.1,2,2.4,2.3,1.8,2.2,2.3,1.5,2.3,2,2,1.8,2.1,1.8,1.8,1.8,2.1,1.6,1.9,2,2.2,1.5,1.4,2.3,2.4,1.8,1.8,2.1,2.4,2.3,1.9,2.3,2.5,2.3,1.9,2,2.3,1.8],["setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Sepal.Length<\/th>\n      <th>Sepal.Width<\/th>\n      <th>Petal.Length<\/th>\n      <th>Petal.Width<\/th>\n      <th>Species<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"scrollY":200,"scrollX":"100%","scrollCollapse":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[8,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+---
+###  Setting a Color
+
+Let's consider a scatter plot of sepal length against petal length.
+
+
+```r
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length)) + geom_point()
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+###  Setting a Color 
+
+Let's set the color of the points to "red". Notice that `color = "red"` is not passed into the `aes()` function. By doing so, the color is set to red rather being determined by some variable in the iris dataset.
+
+
+```r
+# Don't pass color through aes()
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length)) + geom_point(color = "red") 
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+###  Setting the Size 
+We may set the size of the points. Again, notice that `size = 2"` is not passed into the `aes()` function.
+
+
+
+```r
+# Don't pass color, size through aes()
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length)) + geom_point(color = "red", size = 2)
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+
+
+
+---
+###  Setting the Shape 
+We may also set the shape of the points. 
+
+
+```r
+# Don't pass color, size, shape through aes()
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Length)) + geom_point(color = "red", size=2, shape = 2) 
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: center, middle, inverse
+#  Confusing a Setting as an Aesthetic
+---
+###  Passing a Setting into `aes()`
+
+What will happen if we mistakenly pass the option, `color = "red"`, into  `aes()`?
+
+Recall that `aes()` maps the data to features in the visualization.
+
+If we pass (say) the option, `color = Region`, into `aes()`, *ggplot* will use attempt to use the `Region` variable as a `color` aesthetic.
+
+By analogy, if we pass `color = "red"` into `aes()`, *ggplot* will attempt to use the values from a variable, `red`, as a `color` aesthetic.
+
+However, there is no variable, `red`, in our data frame!
+
+
+---
+###  Passing a Setting into `aes()` 
+
+Recall the **recycling** property, which was discussed in Seminar 1 part 3.
+ 
+If we combine a variable with a shorter length (i.e. fewer number of elements) with another longer variable, R will recycle the elements in the shorter vector to match its length with the longer vector's. 
+
+For example, if we try to "column" combine a vector with 5 observations with a data frame with 10 rows, R will recycle the values in the shorter vector to form a vector with 10 observations, before combining the shorter vector as a new column in the data frame.
+
+
+
+---
+###  Passing a Setting into `aes()` 
+
+From the concept of recycling, let's understand what may happen if we mistakenly pass `color = "red"` into `aes()` (red should be a color setting, not an aesthetic).
+
+Since there is no variable "red", R will "construct" a new variable "red" with a single value. As "red" only has one value, passing `color = "red"`into `aes()` will result in only one color being displayed, but the color is not red.
+
+
+
+---
+###  Example: Passing in a Setting as an Aesthetic
+
+To illustrate, let's pass the setting `color = "red"` into  `aes()`. Notice that the scatter points have a different color now. Although there is only one color, it is not red.
+
+
+```r
+# R created a variable with one value "red".
+ggplot(iris, aes(x=Petal.Length, y=Sepal.Length)) + geom_point(aes(color = "red"))
+```
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+###  Exercise 
+
+Let's explore if greater income inequality is associated with higher economic growth. For this task, load the `tidyverse` and `gapminder`. Using `read_csv()` function, import `WDI_Data.csv` into R and save it into a data frame, named `df`. 
+
+Do remove all the `NA`s  by passing the data frame `df` into `na.omit()` and saving the output.
+
+.pull-left[
+Construct a scatter plot with income inequality as the ``y` variable and economic growth as the `x` variable. In the dataset, income inequality is captured by `Gini` and growth is captured by `GDP.Growth`. Use `Region` as a `color` aesthetic and a trendline based on OLS regression.
+]
+
+.pull-right[
+
+
+&lt;img src="AestheticsSettings_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
