@@ -37,14 +37,15 @@ In this course, we employ R to construct data visualizations. The course introdu
 
 5. Data Storytelling Practices [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]
 6. Principles of Data Storytelling and the Grammar of Graphics [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a>]
-7. Storyboarding for Data Visualization
+7. Storyboarding for Data Visualization [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a>]
 
 **Data Visualizations**
 
-8. Data Preprocessing for Data Visualization
-9. Plotting Distributions : Bar Plots, Histograms, Column Plots, Box Plots, Dot Plots, Jitter Plots, Kernel Density Plots, Tree Maps
-10. Plotting Trends and Time Series: Line Charts, Area Charts, Path Plots
-11. Plotting Geospatial Data: Choropleth Maps
+8. Getting Started with ggplots [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_3/"> Seminar 3 </a>]
+9. Data Preprocessing for Data Visualization
+10. Plotting Distributions : Bar Plots, Histograms, Column Plots, Box Plots, Dot Plots, Jitter Plots, Kernel Density Plots, Tree Maps
+11. Plotting Trends and Time Series: Line Charts, Area Charts, Path Plots
+12. Plotting Geospatial Data: Choropleth Maps
 
 **Other Topics**
 
