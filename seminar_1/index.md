@@ -1,6 +1,3 @@
-<a href="https://nicholas-sim.github.io/" > Return to Home
-</a>
-
 ## Seminar 1
 
 Here is the <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/introduction"> overview </a> of the course. By the end of the course, students will become proficient (with effort) in using R for data cleaning, data visualisation, and writing reproducible reports using RMarkdown. As students are not expected to have the prior knowledge in R (although it would be helpful), we will start off with the basics in R operations and programming.
