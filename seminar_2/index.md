@@ -1,18 +1,3 @@
-<a href="https://nicholas-sim.github.io/" class="button">
-  <button type="button" class="btn btn-outline-primary">  Homepage  </button>
-</a>
-
-
-
-<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/" class="button">
-  <button type="button" class="btn btn-outline-primary">  Seminar 1  </button>
-</a>
-<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/" class="button">
-  <button type="button" class="btn btn-outline-primary">  Seminar 2  </button>
-</a>
-
-
-
 ## Seminar 2
 
 Establishing a solid foundation in R programming entails comprehending data frame management with base R, despite the straightforward syntax of _dplyr_ to handle data. Therefore, this seminar will delve into utilizing both base R and _Tidyverse_ for effective data management. Additionally, we will explore the principles of the Grammar of Graphics and explore their significance in providing a structured approach for crafting compelling data visualizations.
