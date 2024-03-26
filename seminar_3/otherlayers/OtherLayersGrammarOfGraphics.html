@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Other Layers in the Grammar of Graphics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nicholas Sim" />
+    <meta name="date" content="2024-03-26" />
+    <script src="OtherLayersGrammarOfGraphics_files/header-attrs-2.24/header-attrs.js"></script>
+    <link href="OtherLayersGrammarOfGraphics_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="OtherLayersGrammarOfGraphics_files/panelset-0.2.6/panelset.js"></script>
+    <script src="OtherLayersGrammarOfGraphics_files/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+    <script src="OtherLayersGrammarOfGraphics_files/plotly-binding-4.10.2/plotly.js"></script>
+    <script src="OtherLayersGrammarOfGraphics_files/typedarray-0.1/typedarray.min.js"></script>
+    <script src="OtherLayersGrammarOfGraphics_files/jquery-3.5.1/jquery.min.js"></script>
+    <link href="OtherLayersGrammarOfGraphics_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="OtherLayersGrammarOfGraphics_files/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+    <link href="OtherLayersGrammarOfGraphics_files/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="OtherLayersGrammarOfGraphics_files/plotly-main-2.11.1/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Other Layers in the Grammar of Graphics
+]
+.author[
+### Nicholas Sim
+]
+.date[
+### 26 March 2024
+]
+
+---
+
+
+
+
+
+
+
+
+
+
+class: center, middle, inverse
+# Introduction
+---
+### Topics 
+
+* Scales, e.g. `scales_x_log10()`
+
+* Labels and guides (for titles, axis titles, etc.)
+
+* Add statistics/trendlines
+
+* Facets (for multiple plots)
+
+* Themes (overall appearance)
+
+* Interactive plots using the `plotly` package
+
+
+---
+### Required Libraries
+
+
+```r
+library(tidyverse)
+library(plotly)
+library(ggthemes)
+```
+
+---
+### Introduction
+
+Ref: Chapter 3 KH
+
+We will explore the other layers in the Grammar of Graphics, i.e. coordinates, statistics, facets and themes.
+
+---
+### Mandatory Layers
+
+&lt;img src="Seminar3_fig1.png" width="30%" style="display: block; margin: auto;" /&gt;
+ 
+
+---
+### Mandatory Layers
+
+&lt;img src="Seminar3_fig2.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### Coordinates and Scales
+
+&lt;img src="Seminar3_fig3.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Adjusting the Scales
+
+We may improve the appearance of the plots by adjusting the scales of the variables. If a variable is very large, we may consider transforming it using a log function.
+
+For instance, we may log-transform the `x` variable using `scale_x_log10()`, and likewise the `y` variable using `scale_y_log10()`.
+
+
+---
+### Declaring the Units
+
+We may also declare the units to be shown on the axes by using `scale_x_log10()` or `scale_y_log10()`. For example, we may declare  `x` in dollars and show this on the x-axis tick marks using the scales package, e.g. `scale_x_log10(labels = scales::dollar)`
+
+If `x` is population, which is a very large number, and we wish to rescale it to per 100,000, we may pass  `labels = scales::unit_format(scale = 1/100000)` into  `scale_x_log10()`.
+
+To suppress the tick marks altogether, we may pass in `labels = scales::unit_format(scale = 1/100000, unit = "")` instead.
+
+
+
+---
+### Labels and Guides
+
+&lt;img src="Seminar3_fig4.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### Declaring the Labels 
+
+To declare the title, axis titles, legend, etc., we may use the `labs()` function. The basic syntax is 
+
+
+
+```r
+labs(x = "x AXIS TITLE", \\
+  y = "Y AXIS TITLE",    \\  
+  title = "FIGURE TITLE", \\   
+  subtitle = "FIGURE SUBTITLE")
+```
+
+
+
+---
+### Declaring the Labels
+
+Plot titles, axis titles, legend titles, etc. can be specified through the `labs()` function.
+
+For instance, if we declare a variable as a `color`, `fill`, `shape` or `size` aesthetic, a legend will be shown with the name of the variable as the default title. To change the legend's title, we pass in the new title into the argument named by the aesthetic itself (i.e. color, shape, size, etc.)
+
+
+
+```r
+labs(x = "X AXIS TITLE",    
+  y = "Y AXIS TITLE",      
+  title = "FIGURE TITLE",  
+  subtitle = "FIGURE SUBTITLE",
+  color = "COLOR TITLE")
+```
+
+To suppress a title, we may set the argument to  `NULL` (e.g. `x = NULL`).
+
+
+---
+### Guides
+
+Guides are essentially legends. One approach of changing the appearance of legends is via the `guides()` function. A common use of `guides()` is to suppress the legend. 
+
+To do so, we add (i.e. `+`) `guides(color = "none")` to our ``ggplot2` command.
+
+
+---
+class: center, middle, inverse
+# Statistics
+
+---
+### Statistics
+
+We may add a trend line by adding `geom_smooth()` to our plot. The default method in `geom_smooth()` is the LOESS approach, which overlays a nonlinear trend line on the plot.
+
+
+To change the nonlinear trend line into a linear regression line, we set the method to `lm`, i.e. `geom_smooth(method = "lm")`. 
+
+
+
+---
+class: center, middle, inverse
+# Facet
+
+---
+### Facet
+
+
+With `facet_wrap()`, we can create multiple plots for different groups specified by a categorical variable.
+
+For instance, let's consider a variable named country, containing the names of countries in our dataset. If we aim to generate a plot for each country and showcase these country-specific plots in a unified visualisation, we can achieve this with `facet_wrap()`.
+
+
+To do so, we may use the `facet_wrap( ~ )` function and pass `country` into the right of lambda `~`, i.e. `facet_wrap(~country)`. 
+
+
+
+---
+### Faceting with Multiple Variables 
+
+
+We can create a facet plot with multiple faceting variables by arranging the facet subplots in a matrix format using the `facet_grid()` function.
+
+For instance, to arrange our plots by years in rows and countries in columns, we can specify Year and Country like this: `facet_grid(Year ~ Country)`. By default, the same scales are applied to each plot in the facet.
+
+To allow each plot to have its own scales, we can "free up" the scales using the `scales = "free"` option within the `facet_wrap()` or `facet_grid()` function. For example, `facet_wrap(~Country, scales = "free")`.
+
+---
+class: center, middle, inverse
+# Theme
+
+---
+### Theme
+
+The `theme()` function allows us to control the overall appearance of our plot.
+
+We can easily apply various pre-set themes such as `theme_bw()`, `theme_minimal()`, `theme_gray()`, etc., by appending them to the command line. Additionally, the `ggthemes` package offers appealing themes that replicate styles from publications like the Wall Street Journal, the Economist, and even Excel.
+
+However, for more customized visualisations, we need to adjust specific parameters using the `theme()` function.
+
+For instance, a common adjustment involves relocating the legend from its default position on the right to another location, such as the top. This can be done by including `theme(legend.position = "top")` in the command line.
+
+Moreover, we can regulate the font size of the title, axis titles, etc., by incorporating `theme(title = element_text(size = 14)`, `axis.title = element_text(size = 12))` into the command line.
+
+
+---
+### Saving the Plot
+
+After plotting, we may save the figure using `ggsave`.
+
+By default `ggsave` saves the last plot that you displayed, using the size of the current graphics device. It also guesses the type of graphics device from the extension.
+
+---
+class: center, middle, inverse
+# Example: Examining the Association between GDP and Income Inequality
+
+---
+### Background
+
+Let's put the concepts together by building a visualisation from scratch.
+
+In this example, let's attempt to address wealthier countries have lower income inequality. In this exercise, we explore the association between GDP per capita and the Gini using `WDI_Data.csv`. As before, save the data into a data frame named `df`.
+
+Using whatever you have learned about aesthetics, scales, plot the Gini against GDP per capita. Use colors to explore if income group matters for the Gini-GDP relationship. Adjust the scales if necessary. Overlay an OLS regression trendline. Explore this relationship for countries in each income group using facets.
+
+In the dataset, income inequality is captured by `Gini` and growth is captured by `GDP.PerCap`. Do remove all the `NA`s by passing your data frame `df` into `na.omit()` and saving the output.
+
+
+
+```r
+df &lt;- read_csv(file = "WDI_Data.csv")
+df &lt;- na.omit(df) 
+```
+
+---
+### Basic Plot
+Here is a basic plot showing a negative relationship between the Gini coefficient and GDP per capita. It is not necessary to adjust the x-axis scale. 
+
+.pull-left[  
+
+```r
+ggplot(data = df, 
+       mapping = aes(x = GDP.PerCap, y =Gini)) +
+  geom_point() 
+```
+]
+
+.pull-right[
+![](OtherLayersGrammarOfGraphics_files/figure-html/wdi.1-1.png)
+]
+
+---
+### Overlaying a Trendline and Color by Income Group
+We overlay a regression line. Figure looks somewhat puzzling as there are high income countries with not quite high incomes. Could it be that very old data are included here?
+
+.pull-left[  
+
+```r
+ggplot(data = df, 
+       mapping = aes(x = GDP.PerCap, y =Gini)) +
+  geom_point(aes(color=Income.Group)) + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+]
+
+.pull-right[
+![](OtherLayersGrammarOfGraphics_files/figure-html/wdi.2-1.png)
+]
+
+---
+### Subsetting the Data 
+
+Let's include only observations after 2010. Even with the focus on later data, the plot is still rather difficult to read.
+
+.pull-left[  
+
+```r
+ggplot(data = subset(df, Year&gt;2010), 
+       mapping = aes(x = GDP.PerCap, y =Gini)) +
+  geom_point(aes(color=Income.Group)) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+]
+
+.pull-right[
+![](OtherLayersGrammarOfGraphics_files/figure-html/wdi.3-1.png)
+]
+
+---
+### Faceting by Income Group
+Let's facet the plot by income group. Note that the legend is becomes irrelevant and should be suppressed (use `guides(color= "none")`).
+
+.pull-left[  
+
+```r
+# Let's try to facet. 
+ggplot(data = subset(df, Year &gt; 2010),
+       mapping = aes(x = GDP.PerCap, y = Gini)) +
+  geom_point(aes(color = Income.Group)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~Income.Group, scales = "free") 
+```
+]
+
+.pull-right[
+![](OtherLayersGrammarOfGraphics_files/figure-html/wdi.4-1.png)
+]
+
+---
+### Labels and Titles
+Let's clean up the plot and axes titles.
+
+.pull-left[  
+
+```r
+ggplot(data = subset(df, Year &gt; 2010), mapping = aes(x = GDP.PerCap, y = Gini)) + 
+  geom_point(aes(color = Income.Group)) + 
+  geom_smooth(method = "lm", se = FALSE) + facet_wrap(~Income.Group, scales = "free") +
+  labs(x = "GDP Per Capita", 
+       y= "Gini Coefficient", 
+       title = "GDP Per Capita and Income Inequality") +
+  guides(color= "none")
+```
+]
+
+.pull-right[
+![](OtherLayersGrammarOfGraphics_files/figure-html/wdi.5-1.png)
+]
+
+---
+### Using Different Theme
+Let's try out a different theme using the `ggthemes` package. 
+
+.pull-left[  
+
+```r
+# Let's use a theme from the Wall Street Journal contained in the ggthemes package
+ggplot(data = subset(df, Year&gt;2010), 
+       mapping = aes(x = GDP.PerCap, y =Gini)) +
+  geom_point(aes(color=Income.Group)) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_wrap(~Income.Group, scales = "free")+
+  labs(x = "GDP Per Capita", y= "Gini Coefficient",
+       title = "GDP Per Capita and Income Inequality") +
+  guides(color="none") + 
+  theme_wsj()
+```
+]
+
+.pull-right[
+![](OtherLayersGrammarOfGraphics_files/figure-html/wdi.6-1.png)
+]
+
+
+
+---
+class: center, middle, inverse
+# Extensions
+
+---
+### Making Interactive Plots
+
+
+R offers a variety of interesting packages for data visualization, including those tailored to transform `ggplots` into interactive visuals. Achieving this is straightforward: simply pass the figure object (i.e., the saved plot) into the `plotly()` function provided by the `plotly` package.
+
+
+.pull-left[
+
+```r
+# As an example
+library(plotly)
+
+p &lt;- ggplot(data = mtcars, mapping= aes(x = disp, y= mpg)) +
+  geom_point() +
+  labs(title='Miles Per Gallon Vs Displacement')
+
+plotly::ggplotly(p)
+```
+]
+.pull-right[
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-6b9ce071af0ba0411e3c" style="width:648px;height:396px;"></div>
+<script type="application/json" data-for="htmlwidget-6b9ce071af0ba0411e3c">{"x":{"data":[{"x":[160,160,108,258,360,225,360,146.69999999999999,140.80000000000001,167.59999999999999,167.59999999999999,275.80000000000001,275.80000000000001,275.80000000000001,472,460,440,78.700000000000003,75.700000000000003,71.099999999999994,120.09999999999999,318,304,350,400,79,120.3,95.099999999999994,351,145,301,121],"y":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"text":["disp: 160.0<br />mpg: 21.0","disp: 160.0<br />mpg: 21.0","disp: 108.0<br />mpg: 22.8","disp: 258.0<br />mpg: 21.4","disp: 360.0<br />mpg: 18.7","disp: 225.0<br />mpg: 18.1","disp: 360.0<br />mpg: 14.3","disp: 146.7<br />mpg: 24.4","disp: 140.8<br />mpg: 22.8","disp: 167.6<br />mpg: 19.2","disp: 167.6<br />mpg: 17.8","disp: 275.8<br />mpg: 16.4","disp: 275.8<br />mpg: 17.3","disp: 275.8<br />mpg: 15.2","disp: 472.0<br />mpg: 10.4","disp: 460.0<br />mpg: 10.4","disp: 440.0<br />mpg: 14.7","disp:  78.7<br />mpg: 32.4","disp:  75.7<br />mpg: 30.4","disp:  71.1<br />mpg: 33.9","disp: 120.1<br />mpg: 21.5","disp: 318.0<br />mpg: 15.5","disp: 304.0<br />mpg: 15.2","disp: 350.0<br />mpg: 13.3","disp: 400.0<br />mpg: 19.2","disp:  79.0<br />mpg: 27.3","disp: 120.3<br />mpg: 26.0","disp:  95.1<br />mpg: 30.4","disp: 351.0<br />mpg: 15.8","disp: 145.0<br />mpg: 19.7","disp: 301.0<br />mpg: 15.0","disp: 121.0<br />mpg: 21.4"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":58.893694101664224,"r":10.62681610626816,"b":60.95928148232008,"l":54.196762141967611},"font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321},"title":{"text":"Miles Per Gallon Vs Displacement","font":{"color":"rgba(0,0,0,1)","family":"","size":25.504358655043593},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[51.054999999999993,492.04500000000002],"tickmode":"array","ticktext":["100","200","300","400"],"tickvals":[100,200,300,400],"categoryorder":"array","categoryarray":["100","200","300","400"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":5.3134080531340802,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":17.002905770029059},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.96607419147892382,"zeroline":false,"anchor":"y","title":{"text":"disp","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[9.2249999999999996,35.074999999999996],"tickmode":"array","ticktext":["10","15","20","25","30","35"],"tickvals":[10,15,20,25,30,35],"categoryorder":"array","categoryarray":["10","15","20","25","30","35"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":5.3134080531340802,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":17.002905770029056},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.96607419147892382,"zeroline":false,"anchor":"x","title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":17.002905770029059}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1ad01f1f6da1":{"x":{},"y":{},"type":"scatter"}},"cur_data":"1ad01f1f6da1","visdat":{"1ad01f1f6da1":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+]
+
+
+---
+### Example
+
+Let's make our plot interactive by using the `plotly` package. First, save the final figure, and then, pass it into the `ggplotly()` function.
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+# Save the final figure and pass it through plotly  
+fig &lt;- ggplot(data = subset(df, Year&gt;2015), 
+              mapping = aes(x = GDP.PerCap, y =Gini, label = Country)) + 
+  geom_point(aes(color = Region)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "GDP Per Capita", 
+       y = "Gini Coefficient", 
+       title = "GDP Per Capita and Income Inequality") 
+
+plotly::ggplotly(fig, width = 1000, height = 400)
+```
+]
+
+.panel[.panel-name[Plot]
+<div id="htmlwidget-45500c89cb3e83b544e0" style="width:1000px;height:400px;" class="plotly html-widget "></div>
+<script type="application/json" data-for="htmlwidget-45500c89cb3e83b544e0">{"x":{"data":[{"x":[6883.8954249999997,3968.0559109999999,4120.4285609999997,4284.6525350000002,1489.1717490000001,3866.2439730000001,4210.0422930000004,5911.9512139999997,6128.6581580000002,6361.6249900000003,1752.5319460000001,1964.475991],"y":[38.5,39.899999999999999,39.399999999999999,39,30.699999999999999,32.299999999999997,32.700000000000003,36.899999999999999,36.5,36.399999999999999,35.299999999999997,35.700000000000003],"text":["GDP.PerCap:   6883.8954<br />Gini: 38.5<br />Country: China<br />Region: East Asia & Pacific","GDP.PerCap:   3968.0559<br />Gini: 39.9<br />Country: Indonesia<br />Region: East Asia & Pacific","GDP.PerCap:   4120.4286<br />Gini: 39.4<br />Country: Indonesia<br />Region: East Asia & Pacific","GDP.PerCap:   4284.6525<br />Gini: 39.0<br />Country: Indonesia<br />Region: East Asia & Pacific","GDP.PerCap:   1489.1717<br />Gini: 30.7<br />Country: Myanmar<br />Region: East Asia & Pacific","GDP.PerCap:   3866.2440<br />Gini: 32.3<br />Country: Mongolia<br />Region: East Asia & Pacific","GDP.PerCap:   4210.0423<br />Gini: 32.7<br />Country: Mongolia<br />Region: East Asia & Pacific","GDP.PerCap:   5911.9512<br />Gini: 36.9<br />Country: Thailand<br />Region: East Asia & Pacific","GDP.PerCap:   6128.6582<br />Gini: 36.5<br />Country: Thailand<br />Region: East Asia & Pacific","GDP.PerCap:   6361.6250<br />Gini: 36.4<br />Country: Thailand<br />Region: East Asia & Pacific","GDP.PerCap:   1752.5319<br />Gini: 35.3<br />Country: Vietnam<br />Region: East Asia & Pacific","GDP.PerCap:   1964.4760<br />Gini: 35.7<br />Country: Vietnam<br />Region: East Asia & Pacific"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"East Asia & Pacific","legendgroup":"East Asia & Pacific","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[4681.8400389999997,4865.209546,3917.379676,4198.7947489999997,4406.7064339999997,48259.937599999997,49112.732889999999,45957.682110000002,46680.207520000004,7966.8820089999999,8331.1522729999997,6372.4017949999998,6536.0121019999997,6744.4986699999999,77026.302190000002,77684.066279999999,29643.827949999999,30650.230869999999,21863.641650000001,22754.7526,45959.574610000003,61877.976479999998,62733.019809999998,31449.617719999998,32282.903849999999,18081.528869999998,19097.864269999998,46720.563750000001,48033.287149999996,42054.531260000003,43001.591289999997,42510.161059999999,4302.7519670000001,4508.6804849999999,4721.3028869999998,22666.286230000002,23052.986229999999,14705.59203,15350.426219999999,15114.42909,15809.77317,67077.743610000005,34454.513919999998,35098.370470000002,10582.700870000001,10867.738740000001,1042.2803280000001,1070.3689429999999,1087.204062,15939.934670000001,16850.986939999999,110162.1208,109452.96000000001,14730.66697,15424.65532,2461.0526759999998,2578.4977090000002,2668.6576920000002,5247.2507839999998,5256.7110489999995,52727.102480000001,53942.08509,90195.963680000001,91549.03787,15101.561949999999,15845.248600000001,22533.632290000001,23380.69283,10236.86217,11029.137210000001,11298.48374,11469.67434,11729.089099999999,6394.4606739999999,6560.3233959999998,19273.512030000002,24551.93404,25721.85744,56776.29391,57367.427900000002,14062.73379,14874.78254,15068.982379999999,2909.6462150000002,2994.5241850000002,3110.1946459999999],"y":[33.700000000000003,33.200000000000003,32.5,33.600000000000001,34.399999999999999,30.800000000000001,29.699999999999999,27.600000000000001,27.399999999999999,40.600000000000001,40.399999999999999,25.300000000000001,25.399999999999999,25.199999999999999,33,32.700000000000003,32.899999999999999,31.399999999999999,25.399999999999999,24.899999999999999,31.899999999999999,28.199999999999999,28.699999999999999,35.799999999999997,34.700000000000003,31.199999999999999,30.399999999999999,27.100000000000001,27.399999999999999,31.899999999999999,31.600000000000001,34.799999999999997,36.600000000000001,37.899999999999999,36.399999999999999,35,34.399999999999999,30.899999999999999,30.399999999999999,30.300000000000001,30.600000000000001,32.799999999999997,35.200000000000003,35.899999999999999,27.199999999999999,27.5,26.800000000000001,27.300000000000001,27.699999999999999,38.399999999999999,37.299999999999997,33,34.899999999999999,34.299999999999997,35.600000000000001,26.300000000000001,25.899999999999999,25.699999999999999,34.5,34.200000000000003,28.199999999999999,28.5,28.5,27,31.199999999999999,29.699999999999999,35.200000000000003,33.799999999999997,34.399999999999999,36,36.799999999999997,37.200000000000003,37.5,38.799999999999997,36.200000000000003,25.199999999999999,24.800000000000001,24.199999999999999,29.600000000000001,28.800000000000001,41.899999999999999,41.399999999999999,41.899999999999999,25,26,26.100000000000001],"text":["GDP.PerCap:   4681.8400<br />Gini: 33.7<br />Country: Albania<br />Region: Europe & Central Asia","GDP.PerCap:   4865.2095<br />Gini: 33.2<br />Country: Albania<br />Region: Europe & Central Asia","GDP.PerCap:   3917.3797<br />Gini: 32.5<br />Country: Armenia<br />Region: Europe & Central Asia","GDP.PerCap:   4198.7947<br />Gini: 33.6<br />Country: Armenia<br />Region: Europe & Central Asia","GDP.PerCap:   4406.7064<br />Gini: 34.4<br />Country: Armenia<br />Region: Europe & Central Asia","GDP.PerCap:  48259.9376<br />Gini: 30.8<br />Country: Austria<br />Region: Europe & Central Asia","GDP.PerCap:  49112.7329<br />Gini: 29.7<br />Country: Austria<br />Region: Europe & Central Asia","GDP.PerCap:  45957.6821<br />Gini: 27.6<br />Country: Belgium<br />Region: Europe & Central Asia","GDP.PerCap:  46680.2075<br />Gini: 27.4<br />Country: Belgium<br />Region: Europe & Central Asia","GDP.PerCap:   7966.8820<br />Gini: 40.6<br />Country: Bulgaria<br />Region: Europe & Central Asia","GDP.PerCap:   8331.1523<br />Gini: 40.4<br />Country: Bulgaria<br />Region: Europe & Central Asia","GDP.PerCap:   6372.4018<br />Gini: 25.3<br />Country: Belarus<br />Region: Europe & Central Asia","GDP.PerCap:   6536.0121<br />Gini: 25.4<br />Country: Belarus<br />Region: Europe & Central Asia","GDP.PerCap:   6744.4987<br />Gini: 25.2<br />Country: Belarus<br />Region: Europe & Central Asia","GDP.PerCap:  77026.3022<br />Gini: 33.0<br />Country: Switzerland<br />Region: Europe & Central Asia","GDP.PerCap:  77684.0663<br />Gini: 32.7<br />Country: Switzerland<br />Region: Europe & Central Asia","GDP.PerCap:  29643.8279<br />Gini: 32.9<br />Country: Cyprus<br />Region: Europe & Central Asia","GDP.PerCap:  30650.2309<br />Gini: 31.4<br />Country: Cyprus<br />Region: Europe & Central Asia","GDP.PerCap:  21863.6417<br />Gini: 25.4<br />Country: Czech Republic<br />Region: Europe & Central Asia","GDP.PerCap:  22754.7526<br />Gini: 24.9<br />Country: Czech Republic<br />Region: Europe & Central Asia","GDP.PerCap:  45959.5746<br />Gini: 31.9<br />Country: Germany<br />Region: Europe & Central Asia","GDP.PerCap:  61877.9765<br />Gini: 28.2<br />Country: Denmark<br />Region: Europe & Central Asia","GDP.PerCap:  62733.0198<br />Gini: 28.7<br />Country: Denmark<br />Region: Europe & Central Asia","GDP.PerCap:  31449.6177<br />Gini: 35.8<br />Country: Spain<br />Region: Europe & Central Asia","GDP.PerCap:  32282.9038<br />Gini: 34.7<br />Country: Spain<br />Region: Europe & Central Asia","GDP.PerCap:  18081.5289<br />Gini: 31.2<br />Country: Estonia<br />Region: Europe & Central Asia","GDP.PerCap:  19097.8643<br />Gini: 30.4<br />Country: Estonia<br />Region: Europe & Central Asia","GDP.PerCap:  46720.5638<br />Gini: 27.1<br />Country: Finland<br />Region: Europe & Central Asia","GDP.PerCap:  48033.2871<br />Gini: 27.4<br />Country: Finland<br />Region: Europe & Central Asia","GDP.PerCap:  42054.5313<br />Gini: 31.9<br />Country: France<br />Region: Europe & Central Asia","GDP.PerCap:  43001.5913<br />Gini: 31.6<br />Country: France<br />Region: Europe & Central Asia","GDP.PerCap:  42510.1611<br />Gini: 34.8<br />Country: United Kingdom<br />Region: Europe & Central Asia","GDP.PerCap:   4302.7520<br />Gini: 36.6<br />Country: Georgia<br />Region: Europe & Central Asia","GDP.PerCap:   4508.6805<br />Gini: 37.9<br />Country: Georgia<br />Region: Europe & Central Asia","GDP.PerCap:   4721.3029<br />Gini: 36.4<br />Country: Georgia<br />Region: Europe & Central Asia","GDP.PerCap:  22666.2862<br />Gini: 35.0<br />Country: Greece<br />Region: Europe & Central Asia","GDP.PerCap:  23052.9862<br />Gini: 34.4<br />Country: Greece<br />Region: Europe & Central Asia","GDP.PerCap:  14705.5920<br />Gini: 30.9<br />Country: Croatia<br />Region: Europe & Central Asia","GDP.PerCap:  15350.4262<br />Gini: 30.4<br />Country: Croatia<br />Region: Europe & Central Asia","GDP.PerCap:  15114.4291<br />Gini: 30.3<br />Country: Hungary<br />Region: Europe & Central Asia","GDP.PerCap:  15809.7732<br />Gini: 30.6<br />Country: Hungary<br />Region: Europe & Central Asia","GDP.PerCap:  67077.7436<br />Gini: 32.8<br />Country: Ireland<br />Region: Europe & Central Asia","GDP.PerCap:  34454.5139<br />Gini: 35.2<br />Country: Italy<br />Region: Europe & Central Asia","GDP.PerCap:  35098.3705<br />Gini: 35.9<br />Country: Italy<br />Region: Europe & Central Asia","GDP.PerCap:  10582.7009<br />Gini: 27.2<br />Country: Kazakhstan<br />Region: Europe & Central Asia","GDP.PerCap:  10867.7387<br />Gini: 27.5<br />Country: Kazakhstan<br />Region: Europe & Central Asia","GDP.PerCap:   1042.2803<br />Gini: 26.8<br />Country: Kyrgyz Republic<br />Region: Europe & Central Asia","GDP.PerCap:   1070.3689<br />Gini: 27.3<br />Country: Kyrgyz Republic<br />Region: Europe & Central Asia","GDP.PerCap:   1087.2041<br />Gini: 27.7<br />Country: Kyrgyz Republic<br />Region: Europe & Central Asia","GDP.PerCap:  15939.9347<br />Gini: 38.4<br />Country: Lithuania<br />Region: Europe & Central Asia","GDP.PerCap:  16850.9869<br />Gini: 37.3<br />Country: Lithuania<br />Region: Europe & Central Asia","GDP.PerCap: 110162.1208<br />Gini: 33.0<br />Country: Luxembourg<br />Region: Europe & Central Asia","GDP.PerCap: 109452.9600<br />Gini: 34.9<br />Country: Luxembourg<br />Region: Europe & Central Asia","GDP.PerCap:  14730.6670<br />Gini: 34.3<br />Country: Latvia<br />Region: Europe & Central Asia","GDP.PerCap:  15424.6553<br />Gini: 35.6<br />Country: Latvia<br />Region: Europe & Central Asia","GDP.PerCap:   2461.0527<br />Gini: 26.3<br />Country: Moldova<br />Region: Europe & Central Asia","GDP.PerCap:   2578.4977<br />Gini: 25.9<br />Country: Moldova<br />Region: Europe & Central Asia","GDP.PerCap:   2668.6577<br />Gini: 25.7<br />Country: Moldova<br />Region: Europe & Central Asia","GDP.PerCap:   5247.2508<br />Gini: 34.5<br />Country: North Macedonia<br />Region: Europe & Central Asia","GDP.PerCap:   5256.7110<br />Gini: 34.2<br />Country: North Macedonia<br />Region: Europe & Central Asia","GDP.PerCap:  52727.1025<br />Gini: 28.2<br />Country: Netherlands<br />Region: Europe & Central Asia","GDP.PerCap:  53942.0851<br />Gini: 28.5<br />Country: Netherlands<br />Region: Europe & Central Asia","GDP.PerCap:  90195.9637<br />Gini: 28.5<br />Country: Norway<br />Region: Europe & Central Asia","GDP.PerCap:  91549.0379<br />Gini: 27.0<br />Country: Norway<br />Region: Europe & Central Asia","GDP.PerCap:  15101.5619<br />Gini: 31.2<br />Country: Poland<br />Region: Europe & Central Asia","GDP.PerCap:  15845.2486<br />Gini: 29.7<br />Country: Poland<br />Region: Europe & Central Asia","GDP.PerCap:  22533.6323<br />Gini: 35.2<br />Country: Portugal<br />Region: Europe & Central Asia","GDP.PerCap:  23380.6928<br />Gini: 33.8<br />Country: Portugal<br />Region: Europe & Central Asia","GDP.PerCap:  10236.8622<br />Gini: 34.4<br />Country: Romania<br />Region: Europe & Central Asia","GDP.PerCap:  11029.1372<br />Gini: 36.0<br />Country: Romania<br />Region: Europe & Central Asia","GDP.PerCap:  11298.4837<br />Gini: 36.8<br />Country: Russian Federation<br />Region: Europe & Central Asia","GDP.PerCap:  11469.6743<br />Gini: 37.2<br />Country: Russian Federation<br />Region: Europe & Central Asia","GDP.PerCap:  11729.0891<br />Gini: 37.5<br />Country: Russian Federation<br />Region: Europe & Central Asia","GDP.PerCap:   6394.4607<br />Gini: 38.8<br />Country: Serbia<br />Region: Europe & Central Asia","GDP.PerCap:   6560.3234<br />Gini: 36.2<br />Country: Serbia<br />Region: Europe & Central Asia","GDP.PerCap:  19273.5120<br />Gini: 25.2<br />Country: Slovak Republic<br />Region: Europe & Central Asia","GDP.PerCap:  24551.9340<br />Gini: 24.8<br />Country: Slovenia<br />Region: Europe & Central Asia","GDP.PerCap:  25721.8574<br />Gini: 24.2<br />Country: Slovenia<br />Region: Europe & Central Asia","GDP.PerCap:  56776.2939<br />Gini: 29.6<br />Country: Sweden<br />Region: Europe & Central Asia","GDP.PerCap:  57367.4279<br />Gini: 28.8<br />Country: Sweden<br />Region: Europe & Central Asia","GDP.PerCap:  14062.7338<br />Gini: 41.9<br />Country: Turkey<br />Region: Europe & Central Asia","GDP.PerCap:  14874.7825<br />Gini: 41.4<br />Country: Turkey<br />Region: Europe & Central Asia","GDP.PerCap:  15068.9824<br />Gini: 41.9<br />Country: Turkey<br />Region: Europe & Central Asia","GDP.PerCap:   2909.6462<br />Gini: 25.0<br />Country: Ukraine<br />Region: Europe & Central Asia","GDP.PerCap:   2994.5242<br />Gini: 26.0<br />Country: Ukraine<br />Region: Europe & Central Asia","GDP.PerCap:   3110.1946<br />Gini: 26.1<br />Country: Ukraine<br />Region: Europe & Central Asia"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(196,154,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(196,154,0,1)"}},"hoveron":"points","name":"Europe & Central Asia","legendgroup":"Europe & Central Asia","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[10239.48135,10404.263510000001,10043.50855,2425.5615899999998,2490.956314,2559.511317,10962.626780000001,10990.18484,11026.24121,14748.51058,7626.0029459999996,7613.7265770000004,7691.7455639999998,9509.7381889999997,9732.2693830000007,9889.7435150000001,7026.179709,7273.3553709999996,7697.7236229999999,5176.0588029999999,5205.7630200000003,5185.091461,2111.1931639999998,2175.155839,2219.319665,8288.9479460000002,10205.795749999999,10403.5404,11108.590700000001,11501.157279999999,11723.930560000001,6262.3689050000003,6314.2914380000002,6453.5605249999999,5089.6120199999996,5272.5757899999999,5396.4808119999998,3381.3203429999999,3441.9950739999999,3511.453782,14124.14386,14437.384690000001,14617.464],"y":[42,41.200000000000003,41.399999999999999,44.600000000000001,44,42.200000000000003,53.299999999999997,53.299999999999997,53.899999999999999,44.399999999999999,50.799999999999997,49.700000000000003,50.399999999999999,48.700000000000003,48.299999999999997,48,45.700000000000003,42.200000000000003,43.700000000000003,45,44.700000000000003,45.399999999999999,51.100000000000001,50.5,52.100000000000001,51.200000000000003,46.299999999999997,45.399999999999999,50.399999999999999,49.899999999999999,49.200000000000003,43.600000000000001,43.299999999999997,42.799999999999997,47.899999999999999,48.799999999999997,46.200000000000003,40,38,38.600000000000001,39.700000000000003,39.5,39.700000000000003],"text":["GDP.PerCap:  10239.4814<br />Gini: 42.0<br />Country: Argentina<br />Region: Latin America & Caribbean","GDP.PerCap:  10404.2635<br />Gini: 41.2<br />Country: Argentina<br />Region: Latin America & Caribbean","GDP.PerCap:  10043.5086<br />Gini: 41.4<br />Country: Argentina<br />Region: Latin America & Caribbean","GDP.PerCap:   2425.5616<br />Gini: 44.6<br />Country: Bolivia<br />Region: Latin America & Caribbean","GDP.PerCap:   2490.9563<br />Gini: 44.0<br />Country: Bolivia<br />Region: Latin America & Caribbean","GDP.PerCap:   2559.5113<br />Gini: 42.2<br />Country: Bolivia<br />Region: Latin America & Caribbean","GDP.PerCap:  10962.6268<br />Gini: 53.3<br />Country: Brazil<br />Region: Latin America & Caribbean","GDP.PerCap:  10990.1848<br />Gini: 53.3<br />Country: Brazil<br />Region: Latin America & Caribbean","GDP.PerCap:  11026.2412<br />Gini: 53.9<br />Country: Brazil<br />Region: Latin America & Caribbean","GDP.PerCap:  14748.5106<br />Gini: 44.4<br />Country: Chile<br />Region: Latin America & Caribbean","GDP.PerCap:   7626.0029<br />Gini: 50.8<br />Country: Colombia<br />Region: Latin America & Caribbean","GDP.PerCap:   7613.7266<br />Gini: 49.7<br />Country: Colombia<br />Region: Latin America & Caribbean","GDP.PerCap:   7691.7456<br />Gini: 50.4<br />Country: Colombia<br />Region: Latin America & Caribbean","GDP.PerCap:   9509.7382<br />Gini: 48.7<br />Country: Costa Rica<br />Region: Latin America & Caribbean","GDP.PerCap:   9732.2694<br />Gini: 48.3<br />Country: Costa Rica<br />Region: Latin America & Caribbean","GDP.PerCap:   9889.7435<br />Gini: 48.0<br />Country: Costa Rica<br />Region: Latin America & Caribbean","GDP.PerCap:   7026.1797<br />Gini: 45.7<br />Country: Dominican Republic<br />Region: Latin America & Caribbean","GDP.PerCap:   7273.3554<br />Gini: 42.2<br />Country: Dominican Republic<br />Region: Latin America & Caribbean","GDP.PerCap:   7697.7236<br />Gini: 43.7<br />Country: Dominican Republic<br />Region: Latin America & Caribbean","GDP.PerCap:   5176.0588<br />Gini: 45.0<br />Country: Ecuador<br />Region: Latin America & Caribbean","GDP.PerCap:   5205.7630<br />Gini: 44.7<br />Country: Ecuador<br />Region: Latin America & Caribbean","GDP.PerCap:   5185.0915<br />Gini: 45.4<br />Country: Ecuador<br />Region: Latin America & Caribbean","GDP.PerCap:   2111.1932<br />Gini: 51.1<br />Country: Honduras<br />Region: Latin America & Caribbean","GDP.PerCap:   2175.1558<br />Gini: 50.5<br />Country: Honduras<br />Region: Latin America & Caribbean","GDP.PerCap:   2219.3197<br />Gini: 52.1<br />Country: Honduras<br />Region: Latin America & Caribbean","GDP.PerCap:   8288.9479<br />Gini: 51.2<br />Country: St. Lucia<br />Region: Latin America & Caribbean","GDP.PerCap:  10205.7957<br />Gini: 46.3<br />Country: Mexico<br />Region: Latin America & Caribbean","GDP.PerCap:  10403.5404<br />Gini: 45.4<br />Country: Mexico<br />Region: Latin America & Caribbean","GDP.PerCap:  11108.5907<br />Gini: 50.4<br />Country: Panama<br />Region: Latin America & Caribbean","GDP.PerCap:  11501.1573<br />Gini: 49.9<br />Country: Panama<br />Region: Latin America & Caribbean","GDP.PerCap:  11723.9306<br />Gini: 49.2<br />Country: Panama<br />Region: Latin America & Caribbean","GDP.PerCap:   6262.3689<br />Gini: 43.6<br />Country: Peru<br />Region: Latin America & Caribbean","GDP.PerCap:   6314.2914<br />Gini: 43.3<br />Country: Peru<br />Region: Latin America & Caribbean","GDP.PerCap:   6453.5605<br />Gini: 42.8<br />Country: Peru<br />Region: Latin America & Caribbean","GDP.PerCap:   5089.6120<br />Gini: 47.9<br />Country: Paraguay<br />Region: Latin America & Caribbean","GDP.PerCap:   5272.5758<br />Gini: 48.8<br />Country: Paraguay<br />Region: Latin America & Caribbean","GDP.PerCap:   5396.4808<br />Gini: 46.2<br />Country: Paraguay<br />Region: Latin America & Caribbean","GDP.PerCap:   3381.3203<br />Gini: 40.0<br />Country: El Salvador<br />Region: Latin America & Caribbean","GDP.PerCap:   3441.9951<br />Gini: 38.0<br />Country: El Salvador<br />Region: Latin America & Caribbean","GDP.PerCap:   3511.4538<br />Gini: 38.6<br />Country: El Salvador<br />Region: Latin America & Caribbean","GDP.PerCap:  14124.1439<br />Gini: 39.7<br />Country: Uruguay<br />Region: Latin America & Caribbean","GDP.PerCap:  14437.3847<br />Gini: 39.5<br />Country: Uruguay<br />Region: Latin America & Caribbean","GDP.PerCap:  14617.4640<br />Gini: 39.7<br />Country: Uruguay<br />Region: Latin America & Caribbean"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(83,180,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(83,180,0,1)"}},"hoveron":"points","name":"Latin America & Caribbean","legendgroup":"Latin America & Caribbean","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2817.3202259999998,6794.2932149999997,6952.4435839999996,33720.764499999997,26645.857410000001,27669.369210000001,2694.5225260000002],"y":[31.5,40,40.799999999999997,39,29.100000000000001,29.199999999999999,33.700000000000003],"text":["GDP.PerCap:   2817.3202<br />Gini: 31.5<br />Country: Egypt, Arab Rep.<br />Region: Middle East & North Africa","GDP.PerCap:   6794.2932<br />Gini: 40.0<br />Country: Iran, Islamic Rep.<br />Region: Middle East & North Africa","GDP.PerCap:   6952.4436<br />Gini: 40.8<br />Country: Iran, Islamic Rep.<br />Region: Middle East & North Africa","GDP.PerCap:  33720.7645<br />Gini: 39.0<br />Country: Israel<br />Region: Middle East & North Africa","GDP.PerCap:  26645.8574<br />Gini: 29.1<br />Country: Malta<br />Region: Middle East & North Africa","GDP.PerCap:  27669.3692<br />Gini: 29.2<br />Country: Malta<br />Region: Middle East & North Africa","GDP.PerCap:   2694.5225<br />Gini: 33.7<br />Country: West Bank and Gaza<br />Region: Middle East & North Africa"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,192,148,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,192,148,1)"}},"hoveron":"points","name":"Middle East & North Africa","legendgroup":"Middle East & North Africa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[52534.365279999998],"y":[41.399999999999999],"text":"GDP.PerCap:  52534.3653<br />Gini: 41.4<br />Country: United States<br />Region: North America","type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,182,235,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,182,235,1)"}},"hoveron":"points","name":"North America","legendgroup":"North America","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1062.040158,3072.0203029999998,3769.1590890000002,7631.4718769999999],"y":[32.399999999999999,37.399999999999999,39.799999999999997,31.300000000000001],"text":["GDP.PerCap:   1062.0402<br />Gini: 32.4<br />Country: Bangladesh<br />Region: South Asia","GDP.PerCap:   3072.0203<br />Gini: 37.4<br />Country: Bhutan<br />Region: South Asia","GDP.PerCap:   3769.1591<br />Gini: 39.8<br />Country: Sri Lanka<br />Region: South Asia","GDP.PerCap:   7631.4719<br />Gini: 31.3<br />Country: Maldives<br />Region: South Asia"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(165,138,255,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(165,138,255,1)"}},"hoveron":"points","name":"South Asia","legendgroup":"South Asia","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[3229.6197400000001,9203.9935609999993,1643.448744,548.26814360000003,1407.0042089999999,10199.479359999999,506.24966130000001,754.23571589999995,472.82543809999999,1287.8093510000001,4662.8206730000002,937.30149159999996,694.00908800000002,1263.321322],"y":[51.299999999999997,38,43.5,35.299999999999997,44.899999999999999,36.799999999999997,44.700000000000003,43.700000000000003,35.700000000000003,56.299999999999997,54.600000000000001,40.5,42.799999999999997,44.299999999999997],"text":["GDP.PerCap:   3229.6197<br />Gini: 51.3<br />Country: Angola<br />Region: Sub-Saharan Africa","GDP.PerCap:   9203.9936<br />Gini: 38.0<br />Country: Gabon<br />Region: Sub-Saharan Africa","GDP.PerCap:   1643.4487<br />Gini: 43.5<br />Country: Ghana<br />Region: Sub-Saharan Africa","GDP.PerCap:    548.2681<br />Gini: 35.3<br />Country: Liberia<br />Region: Sub-Saharan Africa","GDP.PerCap:   1407.0042<br />Gini: 44.9<br />Country: Lesotho<br />Region: Sub-Saharan Africa","GDP.PerCap:  10199.4794<br />Gini: 36.8<br />Country: Mauritius<br />Region: Sub-Saharan Africa","GDP.PerCap:    506.2497<br />Gini: 44.7<br />Country: Malawi<br />Region: Sub-Saharan Africa","GDP.PerCap:    754.2357<br />Gini: 43.7<br />Country: Rwanda<br />Region: Sub-Saharan Africa","GDP.PerCap:    472.8254<br />Gini: 35.7<br />Country: Sierra Leone<br />Region: Sub-Saharan Africa","GDP.PerCap:   1287.8094<br />Gini: 56.3<br />Country: Sao Tome and Principe<br />Region: Sub-Saharan Africa","GDP.PerCap:   4662.8207<br />Gini: 54.6<br />Country: Eswatini<br />Region: Sub-Saharan Africa","GDP.PerCap:    937.3015<br />Gini: 40.5<br />Country: Tanzania<br />Region: Sub-Saharan Africa","GDP.PerCap:    694.0091<br />Gini: 42.8<br />Country: Uganda<br />Region: Sub-Saharan Africa","GDP.PerCap:   1263.3213<br />Gini: 44.3<br />Country: Zimbabwe<br />Region: Sub-Saharan Africa"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(251,97,215,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(251,97,215,1)"}},"hoveron":"points","name":"Sub-Saharan Africa","legendgroup":"Sub-Saharan Africa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[472.82543809999999,1861.2975312886076,3249.7696244772155,4638.2417176658228,6026.7138108544304,7415.1859040430381,8803.6579972316467,10192.130090420254,11580.602183608862,12969.07427679747,14357.546369986077,15746.018463174685,17134.490556363293,18522.962649551901,19911.434742740508,21299.906835929116,22688.378929117724,24076.851022306331,25465.323115494939,26853.795208683547,28242.267301872154,29630.739395060762,31019.21148824937,32407.683581437977,33796.155674626585,35184.627767815196,36573.0998610038,37961.571954192405,39350.044047381016,40738.516140569627,42126.988233758231,43515.460326946835,44903.932420135447,46292.404513324058,47680.876606512662,49069.348699701266,50457.820792889877,51846.292886078489,53234.764979267093,54623.237072455697,56011.709165644308,57400.181258832919,58788.653352021523,60177.125445210128,61565.597538398739,62954.06963158735,64342.541724775954,65731.013817964558,67119.48591115317,68507.958004341781,69896.430097530392,71284.902190718989,72673.3742839076,74061.846377096212,75450.318470284808,76838.79056347342,78227.262656662031,79615.734749850642,81004.206843039254,82392.67893622785,83781.151029416462,85169.623122605073,86558.09521579367,87946.567308982281,89335.039402170893,90723.511495359504,92111.983588548115,93500.455681736712,94888.927774925323,96277.399868113935,97665.871961302531,99054.344054491143,100442.81614767975,101831.28824086837,103219.76033405698,104608.23242724557,105996.70452043418,107385.1766136228,108773.64870681139,110162.1208],"y":[39.181705664100406,38.999269013241125,38.816832362381838,38.634395711522551,38.45195906066327,38.269522409803983,38.087085758944696,37.904649108085415,37.722212457226128,37.539775806366848,37.35733915550756,37.174902504648273,36.992465853788993,36.810029202929705,36.627592552070418,36.445155901211137,36.26271925035185,36.080282599492563,35.897845948633282,35.715409297773995,35.532972646914715,35.350535996055427,35.16809934519614,34.98566269433686,34.803226043477572,34.620789392618285,34.438352741759005,34.255916090899717,34.073479440040437,33.891042789181149,33.708606138321862,33.526169487462582,33.343732836603294,33.161296185744007,32.978859534884727,32.796422884025439,32.613986233166159,32.431549582306872,32.249112931447584,32.066676280588304,31.884239629729016,31.701802978869733,31.519366328010449,31.336929677151161,31.154493026291878,30.972056375432594,30.789619724573306,30.607183073714026,30.424746422854739,30.242309771995451,30.059873121136171,29.877436470276884,29.6949998194176,29.512563168558316,29.330126517699032,29.147689866839748,28.965253215980461,28.782816565121173,28.60037991426189,28.417943263402606,28.235506612543322,28.053069961684038,27.870633310824751,27.68819665996547,27.505760009106183,27.323323358246896,27.140886707387612,26.958450056528328,26.776013405669044,26.59357675480976,26.411140103950473,26.228703453091189,26.046266802231905,25.863830151372618,25.681393500513334,25.49895684965405,25.316520198794766,25.134083547935482,24.951646897076195,24.769210246216911],"text":["GDP.PerCap:    472.8254<br />Gini: 39.18171","GDP.PerCap:   1861.2975<br />Gini: 38.99927","GDP.PerCap:   3249.7696<br />Gini: 38.81683","GDP.PerCap:   4638.2417<br />Gini: 38.63440","GDP.PerCap:   6026.7138<br />Gini: 38.45196","GDP.PerCap:   7415.1859<br />Gini: 38.26952","GDP.PerCap:   8803.6580<br />Gini: 38.08709","GDP.PerCap:  10192.1301<br />Gini: 37.90465","GDP.PerCap:  11580.6022<br />Gini: 37.72221","GDP.PerCap:  12969.0743<br />Gini: 37.53978","GDP.PerCap:  14357.5464<br />Gini: 37.35734","GDP.PerCap:  15746.0185<br />Gini: 37.17490","GDP.PerCap:  17134.4906<br />Gini: 36.99247","GDP.PerCap:  18522.9626<br />Gini: 36.81003","GDP.PerCap:  19911.4347<br />Gini: 36.62759","GDP.PerCap:  21299.9068<br />Gini: 36.44516","GDP.PerCap:  22688.3789<br />Gini: 36.26272","GDP.PerCap:  24076.8510<br />Gini: 36.08028","GDP.PerCap:  25465.3231<br />Gini: 35.89785","GDP.PerCap:  26853.7952<br />Gini: 35.71541","GDP.PerCap:  28242.2673<br />Gini: 35.53297","GDP.PerCap:  29630.7394<br />Gini: 35.35054","GDP.PerCap:  31019.2115<br />Gini: 35.16810","GDP.PerCap:  32407.6836<br />Gini: 34.98566","GDP.PerCap:  33796.1557<br />Gini: 34.80323","GDP.PerCap:  35184.6278<br />Gini: 34.62079","GDP.PerCap:  36573.0999<br />Gini: 34.43835","GDP.PerCap:  37961.5720<br />Gini: 34.25592","GDP.PerCap:  39350.0440<br />Gini: 34.07348","GDP.PerCap:  40738.5161<br />Gini: 33.89104","GDP.PerCap:  42126.9882<br />Gini: 33.70861","GDP.PerCap:  43515.4603<br />Gini: 33.52617","GDP.PerCap:  44903.9324<br />Gini: 33.34373","GDP.PerCap:  46292.4045<br />Gini: 33.16130","GDP.PerCap:  47680.8766<br />Gini: 32.97886","GDP.PerCap:  49069.3487<br />Gini: 32.79642","GDP.PerCap:  50457.8208<br />Gini: 32.61399","GDP.PerCap:  51846.2929<br />Gini: 32.43155","GDP.PerCap:  53234.7650<br />Gini: 32.24911","GDP.PerCap:  54623.2371<br />Gini: 32.06668","GDP.PerCap:  56011.7092<br />Gini: 31.88424","GDP.PerCap:  57400.1813<br />Gini: 31.70180","GDP.PerCap:  58788.6534<br />Gini: 31.51937","GDP.PerCap:  60177.1254<br />Gini: 31.33693","GDP.PerCap:  61565.5975<br />Gini: 31.15449","GDP.PerCap:  62954.0696<br />Gini: 30.97206","GDP.PerCap:  64342.5417<br />Gini: 30.78962","GDP.PerCap:  65731.0138<br />Gini: 30.60718","GDP.PerCap:  67119.4859<br />Gini: 30.42475","GDP.PerCap:  68507.9580<br />Gini: 30.24231","GDP.PerCap:  69896.4301<br />Gini: 30.05987","GDP.PerCap:  71284.9022<br />Gini: 29.87744","GDP.PerCap:  72673.3743<br />Gini: 29.69500","GDP.PerCap:  74061.8464<br />Gini: 29.51256","GDP.PerCap:  75450.3185<br />Gini: 29.33013","GDP.PerCap:  76838.7906<br />Gini: 29.14769","GDP.PerCap:  78227.2627<br />Gini: 28.96525","GDP.PerCap:  79615.7347<br />Gini: 28.78282","GDP.PerCap:  81004.2068<br />Gini: 28.60038","GDP.PerCap:  82392.6789<br />Gini: 28.41794","GDP.PerCap:  83781.1510<br />Gini: 28.23551","GDP.PerCap:  85169.6231<br />Gini: 28.05307","GDP.PerCap:  86558.0952<br />Gini: 27.87063","GDP.PerCap:  87946.5673<br />Gini: 27.68820","GDP.PerCap:  89335.0394<br />Gini: 27.50576","GDP.PerCap:  90723.5115<br />Gini: 27.32332","GDP.PerCap:  92111.9836<br />Gini: 27.14089","GDP.PerCap:  93500.4557<br />Gini: 26.95845","GDP.PerCap:  94888.9278<br />Gini: 26.77601","GDP.PerCap:  96277.3999<br />Gini: 26.59358","GDP.PerCap:  97665.8720<br />Gini: 26.41114","GDP.PerCap:  99054.3441<br />Gini: 26.22870","GDP.PerCap: 100442.8161<br />Gini: 26.04627","GDP.PerCap: 101831.2882<br />Gini: 25.86383","GDP.PerCap: 103219.7603<br />Gini: 25.68139","GDP.PerCap: 104608.2324<br />Gini: 25.49896","GDP.PerCap: 105996.7045<br />Gini: 25.31652","GDP.PerCap: 107385.1766<br />Gini: 25.13408","GDP.PerCap: 108773.6487<br />Gini: 24.95165","GDP.PerCap: 110162.1208<br />Gini: 24.76921"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(51,102,255,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":68.071398920713989,"r":10.62681610626816,"b":70.136986301369859,"l":54.196762141967625},"font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321},"title":{"text":"GDP Per Capita and Income Inequality","font":{"color":"rgba(0,0,0,1)","family":"","size":25.504358655043593},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-5011.6393299950005,115646.585568095],"tickmode":"array","ticktext":["0","30000","60000","90000"],"tickvals":[0,30000,60000.000000000007,90000],"categoryorder":"array","categoryarray":["0","30000","60000","90000"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":5.3134080531340802,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":17.002905770029063},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.96607419147892382,"zeroline":false,"anchor":"y","title":{"text":"GDP Per Capita","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[22.594999999999999,57.904999999999994],"tickmode":"array","ticktext":["30","40","50"],"tickvals":[30,40,50],"categoryorder":"array","categoryarray":["30","40","50"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":5.3134080531340802,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":17.002905770029059},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.96607419147892382,"zeroline":false,"anchor":"x","title":{"text":"Gini Coefficient","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":17.002905770029063},"title":{"text":"Region","font":{"color":"rgba(0,0,0,1)","family":"","size":21.253632212536321}}},"hovermode":"closest","width":1000,"height":400,"barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1ad040ff70fd":{"x":{},"y":{},"label":{},"colour":{},"type":"scatter"},"1ad048473b9c":{"x":{},"y":{},"label":{}}},"cur_data":"1ad040ff70fd","visdat":{"1ad040ff70fd":["function (y) ","x"],"1ad048473b9c":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+]
+]
+
+---
+### Hands-On Activity
+
+Activity 1 to 3 in `Seminar3_demo_part2.r`
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
