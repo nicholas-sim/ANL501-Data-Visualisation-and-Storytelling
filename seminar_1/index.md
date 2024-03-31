@@ -4,7 +4,7 @@ Here is the <a style="font-weight:bold"  href="https://nicholas-sim.github.io/AN
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/operations"> R Operations </a>
 
-This discussion data types, the combine functions, vectors and matrices, array indexing, and conditional filtering.
+This discussion covers data types, the combine functions, vectors and matrices, array indexing, and conditional filtering.
 
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/programming"> R Programming </a>
