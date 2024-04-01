@@ -35,13 +35,13 @@ In this course, we employ R to construct data visualizations. The course introdu
 
 8. Getting Started with ggplots [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_3/"> Seminar 3 </a>]
 9. Data Preprocessing for Data Visualization
-10. Plotting Distributions : Bar Plots, Histograms, Column Plots, Box Plots, Dot Plots, Jitter Plots, Kernel Density Plots, Tree Maps
-11. Plotting Trends and Time Series: Line Charts, Area Charts, Path Plots
+10. Plotting Distributions : Bar Plots, Histograms, Column Plots, Box Plots, Dot Plots, Jitter Plots, Kernel Density Plots, Tree Maps [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
+11. Plotting Trends and Time Series: Line Charts, Area Charts, Path Plots [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
 12. Plotting Geospatial Data: Choropleth Maps
 
 **Other Topics**
 
-12. RMarkdown for Reproducible Report for Analytics
+12. RMarkdown for Reproducible Report for Analytics [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
 13. Integrating Python with R using Reticulate 
 14. Interactive Geospatial Plots with Leaflet
 15. Webscrapping with API
