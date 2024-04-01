@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Bar Charts, Histograms and Densities</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nicholas Sim" />
+    <meta name="date" content="2024-04-01" />
+    <script src="BarChartsHistogramsDensities_files/header-attrs-2.24/header-attrs.js"></script>
+    <link href="BarChartsHistogramsDensities_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="BarChartsHistogramsDensities_files/panelset-0.2.6/panelset.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Bar Charts, Histograms and Densities
+]
+.author[
+### Nicholas Sim
+]
+.date[
+### 01 April 2024
+]
+
+---
+
+
+
+
+
+
+class: center, middle, inverse
+# Introduction
+
+---
+### Topics
+
+
+* `geom_bar()` for plotting bar charts
+
+* `geom_histogram()` for plotting histograms
+
+* `geom_density()` for plotting densities
+
+
+
+---
+### Required Libraries 
+
+
+
+```r
+library(tidyverse)
+library(socviz)
+library(gapminder)
+library(directlabels)
+theme_set(theme_minimal()) # We will use theme_minimal throughout
+```
+
+
+
+---
+### Plotting Distributions
+
+Ref: Chapter 4 KH
+
+We will construct the following using `ggplot2`.
+
+A **bar chart** is useful for displaying information, usually count or proportion, associated with values for a categorical variable.
+
+A **histogram** is a bar chart for displaying the distribution, as counts, for a numerical variable. The range of the numerical variable is first divided up into intervals, and the counts of the variables associated with each interval are displayed as a bar chart.
+
+A **density** plot is a "smoothed" version of a histogram. Think of it  as a histogram with very small bins. 
+
+
+---
+class: center, middle, inverse
+# Bar Chart
+
+---
+### What is a Bar Chart?
+
+
+A **bar chart** visually represents the counts (frequency) or proportions (relative frequency) of categories within a qualitative variable.
+
+To plot a bar chart, we use `geom_bar()`.
+
+`geom_bar()` will first, by default, calculate the **count** (i.e., frequency) of each category within the variable. Subsequently, these counts will be represented as the heights of the bars corresponding to the respective categories.
+
+The underlying calculation is performed by an accompanying `stat()` function linked with `geom_bar()`.
+
+In certain cases, there is a need to represent proportions rather than counts. Achieving this requires adjusting an option within the `stat()` function nested within `geom_bar()`. As we'll demonstrate, this involves utilizing the `aes()` function to specify the computation of proportions.
+
+
+---
+### Example: Plotting A Categorical Variable 
+
+The variable `bigregion` from the `gss_sm` dataset is a categorical variable indicating the region (i.e. Northeast, Midwest, South, West) an observation belongs to.
+
+
+```r
+### bigregion is a categorical variable showing 4 regions.
+table(gss_sm$bigregion)
+```
+
+```
+## 
+## Northeast   Midwest     South      West 
+##       488       695      1052       632
+```
+
+
+---
+### Example: Plotting A Categorical Variable 
+
+Below, we plot the `bigregion` variable using a bar chart. When using `geom_bar()`, we only need to specify the `x` aesthetic. The function will calculate the height of the bars, which by default, represents the count of each category.
+
+However, if we wish to manually specify the height of the bars (i.e., by supplying the `y` aesthetic into `geom_bar()`), we should use the setting `stat = 'identity'`. Alternatively, we may use `geom_col()`, which requires us to specify the `y` aesthetic (to be discussed in Seminar 5).
+
+
+.pull-left[
+
+```r
+### The count is the default output in geom_bar
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = bigregion)) 
+p + geom_bar() 
+```
+]
+
+.pull-right[
+![](BarChartsHistogramsDensities_files/figure-html/bar.1-1.png)
+]
+
+
+---
+class: center, middle, inverse
+# Aesthetics for Bar Charts
+
+---
+### Color vs Fill for Bar Charts
+
+Recall that the `color` aesthetic changes the color of the borders while the `fill` aesthetic changes the color of the interior.
+
+Let's plot the variable `religion` and differentiate the colors of the bars by the same variable.
+
+
+---
+### A Color Aesthetic Cannot Differentiate Bar Colors
+
+Notice that color of the interior doesn't change - only the border does.
+
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = religion, color = religion))  
+p + geom_bar() +  guides(fill = FALSE) 
+```
+
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/bar.color-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+### A Fill Aesthetic Does
+
+The bars are now differentiated by different colors.
+
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = religion, fill = religion))  
+p + geom_bar() + guides(fill = FALSE) 
+```
+
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/bar.fill-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+### Adding a Color Aesthetic when a Fill Aesthetic is Already Used
+
+Adding a `color` aesthetic makes no difference when the `fill` aesthetic is already employed.
+
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = religion, color = religion, fill = religion))  
+p + geom_bar() + guides(fill = FALSE, color=FALSE) 
+```
+
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/bar.color.fill-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Filling in Colors From A Different Variable 
+
+Previously, we plot `religion` use it as a `fill` aesthetic. Now, let's consider plotting `bigregion` but use `religion` as a `fill` aesthetic. This produces a stacked bar chart, where each bar shows the breakdown for Protestants, Catholics, Jewish, etc. for a particular region. 
+
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = bigregion, fill = religion)) 
+
+p + geom_bar() +
+    labs(title = "Distribution (Count) of Religion by Region", 
+         subtitle = "A stacked bar chart is shown by default with religion as the fill aesthetic" ) +
+  theme(plot.title = element_text(size=16), plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/position.1-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+class: center, middle, inverse
+# Unstacking the Bars
+
+---
+### Position: Identity
+
+To unstack the bars, we utilize the `position` setting in `geom_bar()`. The initial approach, employing the `position = 'identity'` setting, unstacks the bars into vertically *overlapping* bars. It is important to note that this could be mistaken for a stacked bar chart and should be avoided when there are multiple categories.
+
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = gss_sm, 
+            mapping = aes(x = bigregion, fill = religion))  
+p + 
+  geom_bar(position = "identity", alpha = 0.4) +
+      labs(title = "Distribution (Count) of Religion by Region", 
+           subtitle = "The position = 'identity' is used to 'unstack' the bar chart") +
+  theme(plot.title = element_text(size=16), 
+        plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/position.2-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+---
+### Position: Identity
+
+Therefore, for an overlap barplot, it would be better to compare two categories, for example, Protestants versus all others:
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- gss_sm %&gt;% mutate(Protestant = religion == "Protestant") %&gt;% 
+  drop_na(Protestant) %&gt;% 
+  ggplot(mapping = aes(x = bigregion, fill = Protestant))
+
+p + 
+  geom_bar(position = "identity", alpha = 0.4) +
+      labs(title = "Protestants and All Others by Region", 
+           subtitle = "The plot aggregates non-Protestants into all others") +
+  scale_fill_manual(values = c("gray80", 'pink'), 
+                    labels = c("No", "Yes")) +
+  theme(plot.title = element_text(size=16), 
+        plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/position.3-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+
+---
+### Position: Dodge
+
+The second approach is to unstack the bars horizontally so that the bars are positioned side-by-side. This can be achieved by using the `position = 'dodge'` setting in `geom_bar()`:
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = bigregion, fill = religion))  
+
+p + 
+  geom_bar(position = "dodge") +
+      labs(title = "Distribution (Count) of Religion by Region", 
+           subtitle = 'A dodge setting is used to "unstack" the bar chart')+
+  theme(plot.title = element_text(size=16), 
+        plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/position.4-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+---
+class: center, middle, inverse
+# Plotting Proportions  
+
+
+---
+### Plotting Proportions  
+
+By default, `geom_bar()` will plot the counts, i.e., frequency, of each category.
+
+To represent proportions instead, we need to specify `y = ..prop..` as the `y`-variable aesthetic in `geom_bar()` (note: the aesthetic `y = ..count..` is used by default, even if not explicitly specified). This type of bar chart is also referred to as a **relative frequency plot**.
+
+Although referencing `y` may appear unusual, the purpose is to instruct `geom_bar()` to use the y-axis to denote proportion rather than count.
+
+However, an immediate issue arises: by default, `geom_bar()` treats each category in `x` as an individual group, rather than considering the entire sample as a single group.
+
+Consequently, the proportion displayed for each category, by default, is not relative to the entire sample but rather to the number of observations within its own category.
+
+
+---
+### Plotting Proportions  
+
+Let's consider the example where we specify `y = ..prop..` to indicate that proportions should be plotted. 
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+### We tell geom_bar to calculate y as a proportion 
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = bigregion)) 
+
+p + geom_bar(mapping = aes(y = ..prop..)) +
+    labs(title = "Plotting Proportions without a Group Aesthetic",
+         subtitle = "Each region is mistakenly treated as a group on its own,\nwhereas the entire sample should treated as a single group") +
+  theme(plot.title = element_text(size = 16), 
+        plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/bar.2-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+### Plotting Proportions  
+What is wrong with the previous plot? Without using a `group` aesthetic, the relative frequency of each category will be relative to the number of observations for that category.
+
+Thus, it will display the proportion of observations for each group relative to the total observations from the &lt;span style="color: red"&gt;**same**&lt;/span&gt; group.
+
+For instance, there are 488 observations in `Northeast`. The proportion of observations in `Northeast` over the total population in `Northeast` is 488/488 = 1!
+
+Consequently, the proportion for each group will be equal to one!
+
+
+
+---
+### Plotting Proportions for Groups  
+
+The correct plot should instead show the proportion of &lt;span style="color: red"&gt;**entire**&lt;/span&gt; sample belonging to Northeast, Midwest, South, and West. In other words, the entire sample should be considered as a single group, and Northeast, Midwest, South, and West shouldn't be treated as standalone groups.
+
+To designate the entire sample as the same group, we employ the following workaround - introducing any number or string as a `group` aesthetic into `geom_bar()`.
+
+For instance, we can use `group = 1` as an aesthetic. Since there is no variable called `1`, R will temporarily create one. Due to the recycling property, this temporary variable will be filled repeatedly with a single value.
+
+Thus, when we assign `1` as a group aesthetic in `geom_bar()`, there will only be one group as `1` contains the same value.
+
+---
+### Tricking R Into Recognizing a Single Group 
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+### We tell geom_bar to calculate y as a proportion  
+### we can even pass in group= "ANL501". The number "1" below doesn't matter.
+
+p + geom_bar(mapping = aes(y = ..prop.., group = 1)) +
+    labs(title = 'Plotting Proportions with a Group Aesthetic "Trick"',
+         subtitle = "The entire sample is now a single group and the proportion of the sample\nattributed to each region is now shown") +
+  theme(plot.title = element_text(size = 16), 
+        plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/bar.3-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+### Using Another Categorical Variable as a Group Aesthetic
+
+Let's plot the relative frequencies across `bigregion` and use `religion` as a `fill` aesthetic. The bars now represent the proportions within each religion category. For example, the Catholic population is quite evenly distributed across the four regions. Protestants tend to be more concentrated in the South.
+
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = bigregion, fill = religion))  
+
+p + 
+  geom_bar(position = "dodge", 
+             aes(y = ..prop.., group = religion)) + 
+  # need a group aesthetic
+  scale_y_continuous(labels = scales::percent)+
+      labs(title = "The Break Down (Proportion) of Religious Groups Across Region", 
+           subtitle = 'The proportions for each religion add up to 1 across regions', 
+           y=NULL)+
+  theme(plot.title = element_text(size=16), 
+        plot.subtitle = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/position.5-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+---
+### Splitting the Plots by Regions
+
+Another way of presenting the distribution of religion is to create facets based on regions. It's important to note that the group aesthetic is based on `bigregion`. Consequently, the plot below compares the distribution of religious groups *within* each region, not *across* regions as we saw earlier.
+
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = religion)) 
+
+p + geom_bar(position = "dodge", 
+             mapping = aes(y = ..prop..,  group = bigregion)) + 
+  facet_wrap(~bigregion) +
+  labs(title ="The Break Down (Proportion) of Religion by Region") +
+  theme(title = element_text(size = 16))
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/position.6-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+class: center, middle, inverse
+# Final Remarks on Plotting Relative Frequencies
+
+
+---
+### Remember: Use the Group Aesthetic When Plotting Proportions
+
+Always remember to include a group aesthetic when plotting proportions (i.e., relative frequencies). 
+
+By default, each category is treated as a separate group, rather than the entire sample.
+
+To ensure that proportions are relative to the entire sample, include a group aesthetic where the group consists of a single value.
+
+---
+### Avoid Using the Same Variable for Both x- and Group Aesthetics
+
+When grouping the data by a certain variable for plotting relative frequencies, keep in mind that these relative frequencies will be computed as proportions of the total count of categories within that variable.
+
+For example, if the data is grouped by `religion` but plotted by `bigregion` (e.g., Northeast, Midwest, South, West), the proportion of a religious group (e.g., Catholic) shown in the plot for a particular region (e.g., Northeast) will be relative to the total count for that religious group in the entire sample.
+
+In other words, if the bar chart displays the proportion of Catholics in the Northeast as 25%, it means that the Northeast region contains 25% of the total number of Catholics in the entire sample.
+
+When grouping the data by `religion`, groups are created based on the categories in `religion`. If a different categorical variable (e.g., `bigregion`) is plotted, the breakdown of each religious group will be observed across the categories of that variable.
+
+Therefore, to plot proportions by region while breaking down each religion across regions, use `bigregion`, then employ `religion` as a `fill` aesthetic, and group the data by `religion`.
+
+---
+### Avoid Using the Same Variable for Both x- and Group Aesthetics
+
+Now, rather than plotting the distribution (based on proportions) of religious groups *across* regions (i.e., each religion as a group), how do we plot the distribution of religious groups *within* each region (i.e., each region as a group)?
+
+Initially, it may seem intuitive to utilize `religion` as a `fill` aesthetic as before, but group the data by &lt;span style="color: red"&gt;`bigregion`&lt;/span&gt;. The intention is to designate each region as a single group to ensure that the categories in religion are distributed _within_ each region rather than _across_ regions.
+
+However, this approach does not achieve the desired outcome (see figure below)!
+
+As a workaround, we need to preprocess the data by constructing a new dataset containing the proportions of religious groups within each region, and then, manually plotting these distributions. This issue will be revisited when we discuss data preprocessing.
+
+---
+### Avoid Using the Same Variable for Both x- and Group Aesthestics
+
+In general, we cannot construct a proportion (i.e. relative frequency) plot using `bigregion` as both `x` and group aesthetic. The distribution of the `fill` variable will not be displayed.
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = gss_sm, mapping = aes(x = bigregion, fill = religion))  
+
+p + geom_bar(position = "dodge", aes(y = ..prop.., group = bigregion)) +
+  labs(title = "Unsuccessful Plot of the Distribution (Proportion) of Religion by Region", subtitle = 'Plotting the distribution of religion "within" each region is unsuccessful when we attempt to group the data by bigregion') +
+  theme(title = element_text(size = 16), plot.subtitle = element_text(size = 14) )
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="BarChartsHistogramsDensities_files/figure-html/remarks.1-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+class: center, middle, inverse
+# Histogram and Density Plots
+
+---
+### What is a Histogram?
+
+A **histogram** is a bar chart that illustrates the distribution of a numerical variable by displaying the likelihood of observing certain values for this variable.
+
+Unlike a bar chart, which represents a categorical variable, a histogram requires the numerical variable to be divided (i.e., discretized) into intervals called "bins". Each bin encompasses a range of values, known as the "bin width".
+
+Similar to `geom_bar()`, which utilizes a `stat` function, `geom_histogram()` is associated with a `stat_bin()` function. By default, `stat_bin()` employs `bins = 30`, which might be excessive in some cases.
+
+To adjust the number of bins, you can specify the desired number within `geom_histogram()`.
+
+
+
+---
+### Example
+
+Let's employ the `socviz::midwest` dataset, which contains data on counties in several US midwestern states. To explore the distribution of county size, we will construct a histogram for the areas of the counties measured in square miles. 
+
+.pull-left[
+
+```r
+### Default of 30 bins are too many.
+p &lt;- ggplot(data = midwest, mapping = aes(x = area))  
+
+p+ geom_histogram()  
+```
+]
+
+.pull-right[
+![](BarChartsHistogramsDensities_files/figure-html/hist.1-1.png)
+]
+
+---
+### Example
+
+The default number of bins is 30. We may vary the bins by using the `bins` option. Below, we pick 10 bins.
+
+
+.pull-left[
+
+
+```r
+### Pick 10 bins
+p &lt;- ggplot(data = midwest, 
+            mapping = aes(x = area))  
+
+p + geom_histogram(bins = 10) +
+  labs(title = "A Basic Histogram with 10 Bins", 
+       subtitle = 'The distribution of county size for counties in several US midwestern states') + 
+  theme(title = element_text(size = 16), 
+        plot.subtitle = element_text(size = 14) )
+```
+
+]
+
+.pull-right[
+![](BarChartsHistogramsDensities_files/figure-html/hist.2-1.png)
+]
+
+
+---
+### Cleaning Up
+
+Let's pick two states - Ohio and Wisconsin - and plot the distribution of the size of their counties.
+
+.pull-left[
+
+```r
+oh_wi &lt;- c("OH", "WI") ### This can go into ggplot directly if it is not too confusing. 
+
+p &lt;- ggplot(data = subset(midwest, subset = state %in% oh_wi),  
+            mapping = aes(x = percollege, fill = state))  
+
+### Control for the transparency of the histogram by using the alpha setting 
+p + geom_histogram(alpha = 0.4, bins = 20) +
+  labs(title = "A Histogram with a Fill Aesthetic", 
+       subtitle = 'The distribution of county size when "state" is used as a fill aesthetic') +
+  theme(title = element_text(size = 16), 
+        plot.subtitle = element_text(size = 14) )
+```
+]
+
+.pull-right[
+![](BarChartsHistogramsDensities_files/figure-html/hist.5-1.png)
+]
+
+---
+### What is a Density Plot?
+
+The **density plot** shows how values of a variable are distributed. It can be constructed using `geom_density()`. Let's construct a density plot for the size of counties contained in the `midwest` dataset:
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = midwest, 
+            mapping = aes(x = area))  
+p + geom_density() 
+```
+]
+
+.pull-right[
+![](BarChartsHistogramsDensities_files/figure-html/density.1-1.png)
+]
+
+
+
+---
+### Example 
+
+Let's use `state` as both color and fill aesthetics for the density plot. The setting `alpha` controls the opacity of the plot (`=1` being completely opaque). Set `alpha=0.3` so that the densities are somewhat less opaque.
+
+.pull-left[
+
+
+```r
+p &lt;- ggplot(data = midwest, 
+            mapping = aes(x = area, fill = state,  color = state))  
+
+p + geom_density(alpha = 0.3) 
+```
+]
+
+.pull-right[
+![](BarChartsHistogramsDensities_files/figure-html/density.2-1.png)
+]
+
+---
+### Exercise 
+
+For this exercise, use RMarkdown with html output to create a document. We will analyze a dataset from `esoph`, which is available from `library(datasets)`. Set your `knitr` options to `echo = FALSE, warning = FALSE = message = FALSE`  to hide R codes, warning messages on the markdown output. Organize your RMarkdown document into the following parts. 
+
+.panelset[
+.panel[.panel-name[Introduction]
+1. **Introduction**
+In about 60 words, write what you observe about `esoph`. To do so, you may wish to view the dataset, look at the structure, i,e. `str()`, or display some results.
+]
+
+.panel[.panel-name[EDA]
+2. **Exploratory Analysis**
+Show a bar chart on the age group (`agegp`) and use alcohol consumption grams/day (`alcgp`) as a color and fill aesthetic. Repeat the same using tobacco consumption gram/day (`tobgp`) as color and fill aesthetic. Keep your bar chart as a stacked bar bar chart and write your observations in about 60 words.
+
+
+
+
+]
+
+.panel[.panel-name[Observations]
+3. **Oesophageal Cancer, Alcohol and Tobacco Consumption, and Age**
+
+Chart the number of oesophageal cancer cases (`ncases`) corresponding to various age groups using `geom_col()`. The basic syntax is `ggplot(data=esoph, aes(x=agegp, y=ncases)) + geom_col()`. Generate a stacked barchart using alcohol consumption  (`alcgp` ) as a color and fill aesthetic.
+
+Repeat the above using tobacco consumption (`tobgp`) as a color and fill aesthetic. Describe your observation in no more than 80 words.
+
+.pull-left[
+
+]
+.pull-right[
+
+]
+]
+
+.panel[.panel-name[Conclusion]
+4. **Conclusion**
+Write a brief conclusion.
+]
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
