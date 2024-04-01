@@ -3,7 +3,7 @@
 We explore visualization approaches for time series and for displaying distributions.
 
 
-<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/timeseriesplots">  Data Management in Base R </a>
+<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/timeseriesplots">  Time Series Plots </a>
 
 We learn how to plot time trends using time series data.
 
