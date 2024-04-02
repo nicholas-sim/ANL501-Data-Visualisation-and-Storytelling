@@ -37,12 +37,12 @@ In this course, we employ R to construct data visualizations. The course introdu
 
 **Other Topics**
 
-1. RMarkdown for Reproducible Report for Analytics [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
-1. Integrating Python with R using Reticulate (various parts in <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a> and <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/"> Seminar 5 </a>)
-1. Further Issues in Geospatial Visualization (*ggmap*, plotting various shape files) [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_6/"> Seminar 6 </a>]
-1. Interactive Geospatial Plots with Leaflet [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_6/"> Seminar 6 </a>]
-1. Webscrapping with API
-1. Creating a Data Visualization Portfolio on Github
+  1. RMarkdown for Reproducible Report for Analytics [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
+  1. Integrating Python with R using Reticulate (various parts in <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a> and <a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/"> Seminar 5 </a>)
+  1. Further Issues in Geospatial Visualization (*ggmap*, plotting various shape files) [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_6/"> Seminar 6 </a>]
+  1. Interactive Geospatial Plots with Leaflet [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_6/"> Seminar 6 </a>]
+  1. Webscrapping with API
+  1. Creating a Data Visualization Portfolio on Github
 
 
 
