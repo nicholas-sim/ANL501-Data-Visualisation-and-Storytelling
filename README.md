@@ -1,5 +1,3 @@
-<a href="https://nicholas-sim.github.io/" > Return to Home
-</a>
 
 ><p style="font-size: 12px; color: brown;">"<em> A most gruesome and nerve-racking assignment to finish as my last module with SUSS in exchange for the master's certificate </em>"  </p>
 
