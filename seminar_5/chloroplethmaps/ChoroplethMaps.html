@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Choropleth Maps</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nicholas Sim" />
+    <meta name="date" content="2024-04-10" />
+    <script src="ChoroplethMaps_files/header-attrs-2.24/header-attrs.js"></script>
+    <link href="ChoroplethMaps_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="ChoroplethMaps_files/panelset-0.2.6/panelset.js"></script>
+    <script src="ChoroplethMaps_files/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+    <link href="ChoroplethMaps_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="ChoroplethMaps_files/datatables-binding-0.29/datatables.js"></script>
+    <script src="ChoroplethMaps_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <link href="ChoroplethMaps_files/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="ChoroplethMaps_files/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="ChoroplethMaps_files/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
+    <link href="ChoroplethMaps_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="ChoroplethMaps_files/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Choropleth Maps
+]
+.author[
+### Nicholas Sim
+]
+.date[
+### 10 April 2024
+]
+
+---
+
+
+
+
+
+
+class: center, middle, inverse
+# Introduction
+
+---
+### Topics
+
+* Using in-built maps from `library(maps)`
+
+* Map construction using `geom_polygon()`
+
+* Combine map data with spatial variables
+
+* Map data from `rnatrualearth` 
+
+* The `sf` (simple features) package and `geom_sf()`
+
+* `grid.arrange()` for laying multiple plots in a single graph
+
+
+---
+### Required Libraries
+
+
+
+```r
+library(tidyverse)
+library(socviz)
+library(maps) # To extract map data
+library(mapproj)
+library(ggthemes) # For standard themes
+library(ggpubr) # To use ggarrange
+library(sf) # To read and plot simple features data frame
+library(gridExtra) # For grid.arrange
+library(ggrepel) # To include labels
+theme_set(theme_bw()) 
+```
+
+---
+### Choropleth Maps
+
+Ref: Chapter 7 KH
+
+A **choropleth map** is a thematic map where regions or areas on the map are colored in proportion to the values of a variable of interest.
+
+.pull-left[For instance, the map here shows the 2016 US elections results. The states are represented by two colors, red if won by the Republicans and blue if won by the Democrats.
+
+Additionally, the states with a larger number of electoral seats are represented by a deeper shade of color. ]
+
+.pull-right[
+![US Elections](election_map.png)
+]
+
+---
+### Constructing a Choropleth Map 
+
+The choropleth map is constructed in two steps.
+
+
+    1. Plot the boundaries, a.k.a. "polygons", of the regions. We may do so with `geom_polygon()` (later, we will explore `geom_sf()`).
+
+
+    2. Use a variable as a `fill` aesthetic to fill the area of the polygons.
+
+---
+### What is a Boundary?
+
+A boundary is a closed line plot constructed by tracing out points on an x-y axis. For example, the subplot on the left shown below plots out the boundary of a region using `geom_path()`. A map is essentially a boundary plot, except that the x-aesthetic represents longitude (i.e., east-west) and the y-aesthetic represents latitude (i.e., north-south). This is shown in the right subplot illustrating the boundaries of New Caledonia.
+
+&lt;img src="ChoroplethMaps_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### The `maps` Package 
+
+
+Map data consists of points defined by longitudes and latitudes, which delineate the boundaries of various regions like countries, states, or counties. The maps package conveniently organizes latitude and longitude coordinates into a data frame, facilitating the plotting of sub-regions within countries such as the United States, France, and New Zealand. Additionally, it includes a low-resolution world map where points outlining regions are further apart.
+
+However, not all map data is readily available in a standard data frame format with separate longitude and latitude columns. Frequently, map data sourced from providers are formatted differently, often as shape (`shp`) files, simple features (`sf`) files, or geojson (`geojson`) files.
+
+In this exercise, we'll utilize the maps package to generate choropleth maps for the United States. Let's start by saving the map data for US states.
+
+
+
+```r
+library(maps)  
+us_states &lt;- map_data("state") # you may select county too.
+```
+
+
+---
+class: center, middle, inverse
+# Map Data Frame
+
+---
+### Necessary Components for Plotting Polygons
+
+.pull-left[
+
+Let's look at the `us_states` map data. Notice that `us_states` is a standard data frame containing a location's  **longitude** (east-west), **latitude** (north-south), and a **group** identifier (id).
+]
+
+.pull-right[
+
+```r
+head(us_states[,1:4],3)
+```
+
+```
+##        long      lat group order
+## 1 -87.46201 30.38968     1     1
+## 2 -87.48493 30.37249     1     2
+## 3 -87.52503 30.37249     1     3
+```
+]
+
+These three variables are required for `geom_polygon()` to trace out the boundaries of an area by connecting the coordinates. The coordinates representing the boundaries of an area will be joined by the line to form a **polygon**. 
+
+To ensure that the coordinates are connected by the line in the correct sequence, there is a variable called `order`. The variable contains the order by which the coordinates are to be connected to form a polygon.
+
+Since  `geom_polygon()` works by plotting a line that connects the longitude and latitude of one row with those of the next row in the data frame, we need to ensure that the rows are correctly ordered first before plotting.
+
+---
+### Drawing a Map
+
+
+`geom_polygon()` in `ggplot2` is utilized to render polygons on a plot. It requires the longitude to be assigned to the x-aesthetic (representing east-west orientation), latitude to the y-aesthetic (representing north-south orientation), and a group aesthetic, which typically serves as a group identifier.
+
+The group ID is crucial for delineating the boundaries of regions. It helps in identifying where a boundary starts and ends, ensuring the correct formation of polygons.
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = us_states, 
+            mapping = aes(x = long, y = lat, group = group)) 
+
+p + geom_polygon(fill = "white", color = "black") 
+```
+]
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/map.1-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+### Importance of Group ID
+
+As discussed, `geom_polygon()` will simply connect the longitude and latitude contained in one row with those of the next row. Without declaring the states as groups using a group aesthetic, the polygon will not terminate at the end of the state boundary.
+
+For instance, Row 202 is the last observation for Alabama and Row 204 is the first observation for Arizona.
+
+Without declaring the group id, `geom_polygon()` will mistakenly connect the longitude and latitude of Row 202 with those of Row 204. This will result in a line connecting Alabama and Arizona, instead of the boundary line terminating at Row 202, the last record for Alabama.
+
+
+```r
+us_states[201:204,]
+```
+
+```
+##           long      lat group order  region subregion
+## 201  -87.45055 30.40114     1   201 alabama      &lt;NA&gt;
+## 202  -87.46201 30.38968     1   202 alabama      &lt;NA&gt;
+## 204 -114.63739 35.01918     2   204 arizona      &lt;NA&gt;
+## 205 -114.64313 35.10512     2   205 arizona      &lt;NA&gt;
+```
+
+
+---
+### Importance of Group ID
+
+Thus, if the group id is not declared, we will have the following plot:
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = us_states, 
+            mapping = aes(x = long, y = lat)) 
+
+p + geom_polygon(fill = "white", color="black")
+```
+]
+
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/map.2-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+### Importance of Ordering 
+
+Since `geom_polygon()` connects the longitudes and latitudes values in the rows of the data frame in sequence, the boundary will not be correctly traced out if the rows are not properly ordered.
+
+For instance, let's shuffle the rows and see what happens.
+
+
+```r
+index &lt;- sample(nrow(us_states)) #random index
+us_states.1 &lt;- us_states[index,] %&gt;% arrange(group)  
+head(us_states.1) # Order within a group is shuffled
+```
+
+```
+##        long      lat group order  region subregion
+## 1 -87.46774 30.52719     1   192 alabama      &lt;NA&gt;
+## 2 -88.16675 34.95043     1    87 alabama      &lt;NA&gt;
+## 3 -86.31036 34.99053     1    96 alabama      &lt;NA&gt;
+## 4 -85.23893 33.10550     1   110 alabama      &lt;NA&gt;
+## 5 -87.63390 30.85951     1   181 alabama      &lt;NA&gt;
+## 6 -85.49677 31.00847     1   168 alabama      &lt;NA&gt;
+```
+
+---
+### Importance of Ordering 
+
+Now, let's plot the map with the rows ordered out-of-sequence:
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = us_states.1, 
+            mapping = aes(x = long, y = lat, group = group)) 
+
+p + geom_polygon(aes(color = group), fill = "white") +
+  scale_color_viridis_c() +
+  theme(legend.position = "none")
+```
+]
+
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/map.3-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: center, middle, inverse
+# Coordinates and Labels
+
+---
+### Adjusting the Coordinates
+
+Maps projected onto a flat surface will be distorted as the earth is elliptical. The distortion will be more severe for locations further away from the Equator.
+
+To reduce such distortions, we should project a map on a non-flat surface such as an open cone. For a list of possible projections, see the help file for `mapproject()`.
+
+Below, we employ the "Albers" projection.
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = us_states,  
+            mapping = aes(x = long, y = lat,  
+                          group = group, fill = region)) # use region as a fill aesthetic  
+
+p + geom_polygon(color = "gray90", size = 0.1) + 
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +  # Albers projection requires lat0 and lat1
+  guides(fill = FALSE) 
+```
+]
+
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/map.4-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+### Adding Labels (The Wrong Way)
+
+To label the states on the map, we might be tempted to pass in `region` as a label aesthetic. This is incorrect as each state has multiple rows of longitudes and latitudes for drawing the state boundary, and each row has a state label.
+
+If we pass `region` in as a label, the state label will appear on the map for each row that the state label exists in the data frame.
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = us_states,  
+            mapping = aes(x = long, y = lat,  
+                          group = group, fill = region)) # use region as a fill aesthetic  
+
+p + geom_polygon(color = "gray90", size = 0.1) + coord_map(projection = "albers", lat0 = 39, lat1 = 45) +  # Albers projection requires lat0 and lat1
+  guides(fill = FALSE) + geom_text(mapping = aes(label = region), size = 3, hjust = 0.5)
+```
+]
+
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/map.5-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+
+
+---
+### Adding Labels (The Right Way)
+
+To avoid this, we should create a new data frame containing the longitude and latitude of the **centroid** of each state, which is the center of the state. 
+
+The centroid can be approximated by the mean of the state's longitudes and latitudes. Below, we create a new data frame `us_states.lab` containing the centroid of each state.
+
+.pull-left[
+
+```r
+us_states.lab &lt;- us_states %&gt;%
+  group_by(region) %&gt;% # Can group by the group id
+  summarise(long = mean(long), lat = mean(lat))
+
+head(us_states.lab, 3)
+```
+]
+
+.pull-right[ 
+
+```
+## # A tibble: 3 × 3
+##   region     long   lat
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 alabama   -86.9  31.7
+## 2 arizona  -113.   34.5
+## 3 arkansas  -91.3  34.6
+```
+]
+
+
+Here, there is only one set of longitude and latitude for each state, and therefore, only one label for each state. By declaring the new data frame locally in `geom_text_repel()`, we may plot the state label next to the centroid for each state (and avoid having repeated labels).
+
+
+---
+### Adding Labels (The Right Way)
+
+Using `us_states.lab`, we pass the `region` variable into `geom_text_repel()` to label the centroid's longitude and latitude, specified as the `x` and `y` aesthetic in `geom_text_repel()`:
+
+.pull-left[
+
+```r
+p &lt;- ggplot(data = us_states,  
+            mapping = aes(x = long, y = lat,  
+                          group = group, fill = region)) # use region as a fill aesthetic  
+
+p + geom_polygon(color = "gray90", size = 0.1) + 
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +  # Albers projection requires lat0 and lat1
+  guides(fill = FALSE) + 
+  geom_text_repel(data = us_states.lab, 
+                  mapping = aes(x = long, y=lat, group = region, label = region), size = 3, hjust = 0.5)
+
+# Notice we pass in a different dataset into geom_text_repel.
+```
+]
+
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/map.6-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: center, middle, inverse
+# Visualizing A Variable Spatially
+
+---
+### Merging Map Data with Data on Regional Attributes
+
+A choropleth map uses color gradients to differentiate the values of a variable (categorical or numerical) when visualized on a map. To visualize a variable on a map, we declare it as a `fill` aesthetic.
+
+Before a choropleth map is constructed, we need to first merge the map data with our dataset. To illustrate, we will construct two choropleth maps. The first will indicate the winning party for each state during the 2016 US election and second will display Donald Trump's winning percentage instead. 
+
+The party and winning percentage data can be found in the `election` dataset from the `socviz` package.
+
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-97f023df4882da5c889a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-97f023df4882da5c889a">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51"],["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],[1,2,4,5,6,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,50,51,53,54,55,56],[2123372,318608,2604657,1130635,14237893,2780247,1644920,443814,311268,9502747,4141447,428937,690433,5594825,2757965,1566031,1194755,1924150,2029032,747927,2781446,3325046,4824542,2945233,1211088,2828266,501822,844227,1125385,744296,3906723,798319,7721795,4741564,344360,5536547,1452992,2001336,6166729,464144,2103027,370093,2508027,8993166,1143601,315067,3982752,3316996,721233,2976150,255849],[588708,46933,91234,304378,4269978,136386,224357,50476,270107,112911,211141,138044,219290,944714,524160,147314,244013,574117,398484,22142,734759,904303,10704,44593,215583,523443,101531,211467,27202,2736,546345,65567,1736585,173315,123036,446837,528761,219703,44292,71982,300016,110263,652230,807179,204555,83204,212030,520971,300577,22748,118446],["Trump","Trump","Trump","Trump","Clinton","Clinton","Clinton","Clinton","Clinton","Trump","Trump","Clinton","Trump","Clinton","Trump","Trump","Trump","Trump","Trump","Clinton","Clinton","Clinton","Trump","Clinton","Trump","Trump","Trump","Trump","Clinton","Clinton","Clinton","Clinton","Clinton","Trump","Trump","Trump","Trump","Clinton","Trump","Clinton","Trump","Trump","Trump","Trump","Trump","Clinton","Clinton","Clinton","Trump","Trump","Trump"],["Republican","Republican","Republican","Republican","Democratic","Democratic","Democratic","Democratic","Democratic","Republican","Republican","Democratic","Republican","Democratic","Republican","Republican","Republican","Republican","Republican","Democratic","Democratic","Democratic","Republican","Democratic","Republican","Republican","Republican","Republican","Democratic","Democratic","Democratic","Democratic","Democratic","Republican","Republican","Republican","Republican","Democratic","Republican","Democratic","Republican","Republican","Republican","Republican","Republican","Democratic","Democratic","Democratic","Republican","Republican","Republican"],[0.2773,0.1473,0.035,0.2692,0.2999,0.0491,0.1364,0.1137,0.8678,0.0119,0.051,0.3218,0.3176,0.1689,0.1901,0.0941,0.2042,0.2984,0.1964,0.0296,0.2642,0.272,0.0022,0.0151,0.178,0.1851,0.2023,0.2505,0.0242,0.0037,0.1398,0.08210000000000001,0.2249,0.0366,0.3573,0.08069999999999999,0.3639,0.1098,0.0072,0.1551,0.1427,0.2979,0.2601,0.0898,0.1789,0.2641,0.0532,0.1571,0.4168,0.0076,0.463],[27.72,14.73,3.5,26.92,-29.99,-4.909999999999997,-13.64,-11.38,-86.77,1.190000000000005,5.089999999999996,-32.18,31.77,-16.88,19.01,9.409999999999997,20.41999999999999,29.84,19.64,-2.960000000000001,-26.42,-27.2,0.2199999999999989,-1.509999999999998,17.8,18.51000000000001,20.24,25.05,-2.420000000000002,-0.3699999999999974,-13.99,-8.219999999999999,-22.49,3.659999999999997,35.73,8.07,36.38999999999999,-10.98,0.7100000000000009,-15.51,14.27,29.79,26,8.980000000000004,17.88,-26.41,-5.32,-15.71,41.66999999999999,0.769999999999996,46.29000000000001],[-27.72,-14.73,-3.5,-26.92,29.99,4.909999999999997,13.64,11.38,86.77,-1.190000000000005,-5.089999999999996,32.18,-31.77,16.88,-19.01,-9.409999999999997,-20.41999999999999,-29.84,-19.64,2.960000000000001,26.42,27.2,-0.2199999999999989,1.509999999999998,-17.8,-18.51000000000001,-20.24,-25.05,2.420000000000002,0.3699999999999974,13.99,8.219999999999999,22.49,-3.659999999999997,-35.73,-8.07,-36.38999999999999,10.98,-0.7100000000000009,15.51,-14.27,-29.79,-26,-8.980000000000004,-17.88,26.41,5.32,15.71,-41.66999999999999,-0.769999999999996,-46.29000000000001],[34.36,36.55,44.58,33.65,61.48,48.16,54.57,53.09,90.86,47.41,45.35,62.22,27.48,55.24,37.46,41.74,35.74,32.68,38.45,47.83,60.33,60.01,47.03,46.44,40.06,37.87,35.41,33.7,47.92,46.83,54.99,48.26,59,46.17,27.23,43.24,28.93,50.07,47.46,54.41,40.67,31.74,34.72,43.12,27.17,56.68,49.75,52.54,26.18,46.45,21.88],[62.08,51.28,48.08,60.57,31.49,43.25,40.93,41.71,4.09,48.6,50.44,30.04,59.25,38.36,56.47,51.15,56.16,62.52,58.09,44.87,33.91,32.81,47.25,44.93,57.86,56.38,55.65,58.75,45.5,46.46,41,40.04,36.51,49.83,62.96,51.31,65.31999999999999,39.09,48.17,38.9,54.94,61.53,60.72,52.1,45.05,30.27,44.43,36.83,67.84999999999999,47.22,68.17],[2.09,5.88,4.08,2.64,3.36,5.18,2.96,3.33,1.58,2.18,3.03,3.72,4.1,3.75,4.86,3.78,4.64,2.79,1.87,5.09,2.86,4.15,3.57,3.84,1.19,3.44,5.59,4.61,3.32,4.14,1.86,9.34,2.29,2.74,6.22,3.15,5.75,4.71,2.38,3.18,2.34,5.63,2.81,3.15,3.46,3.2,2.97,4.85,3.19,3.58,5.19],[1.46,6.29,3.25,3.13,3.66,3.41,1.55,1.88,3.47,1.82,1.18,4.02,9.17,2.65,1.22,3.33,3.46,2,1.59,2.21,2.9,3.04,2.16,4.79,0.89,2.31,3.35,2.94,3.26,2.58,2.15,2.36,2.2,1.25,3.59,2.29,0,6.13,1.99,3.52,2.05,1.1,1.75,1.63,24.32,9.85,2.85,5.78,2.78,2.74,4.76],[729547,116454,1161167,380494,8753792,1338870,897572,235603,282830,4504975,1877963,266891,189765,3090729,1033126,653669,427005,628854,780154,357735,1677928,1995196,2268839,1367825,485131,1071068,177709,284494,539260,348526,2148278,385234,4556142,2189316,93758,2394169,420375,1002106,2926441,252525,855373,117458,870695,3877868,310676,178573,1981473,1742718,188794,1382536,55973],[1318255,163387,1252401,684872,4483814,1202484,673215,185127,12723,4617886,2089104,128847,409055,2146015,1557286,800983,671018,1202971,1178638,335593,943169,1090893,2279543,1323232,700714,1594511,279240,495961,512058,345790,1601933,319667,2819557,2362631,216794,2841006,949136,782403,2970733,180543,1155389,227721,1522925,4685047,515231,95369,1769443,1221747,489371,1405284,174419],[44467,18725,106327,29829,478500,144121,48676,14757,4906,207043,125306,15954,28331,209596,133993,59186,55406,53752,37978,38105,79605,138018,172136,112984,14435,97359,28037,38946,37384,30777,72477,74541,176600,130126,21434,174498,83481,94231,146715,14746,49204,20850,70397,283492,39608,10078,118274,160879,23004,106674,13287],[31103,20042,84762,35440,521787,94772,25457,8327,10809,172843,49074,17245,63282,148485,33560,52193,41326,38573,32262,16494,80744,100939,104024,141192,10808,65328,16836,24826,36683,19203,84035,18877,169496,59491,12374,126874,0,122596,122840,16330,43061,4064,44010,146759,278086,31047,113562,191652,20064,81656,12170],[0,0,0,0,55,9,7,3,3,0,0,3,0,20,0,0,0,0,0,3,10,11,0,10,0,0,0,0,6,4,14,5,29,0,0,0,0,7,0,4,0,0,0,0,0,3,13,8,0,0,0],[9,3,11,6,0,0,0,0,0,29,16,0,4,0,11,6,6,8,8,1,0,0,16,0,6,10,3,5,0,0,0,0,0,15,3,18,7,0,20,0,9,3,11,36,6,0,0,0,5,10,3],[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,4,0,0,0],["South","West","West","South","West","West","Northeast","South","South","South","South","West","West","Midwest","Midwest","Midwest","Midwest","South","South","Northeast","South","Northeast","Midwest","Midwest","South","Midwest","West","Midwest","West","Northeast","Northeast","West","Northeast","South","Midwest","Midwest","South","West","Northeast","Northeast","South","Midwest","South","South","West","Northeast","South","West","South","Midwest","West"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>state<\/th>\n      <th>st<\/th>\n      <th>fips<\/th>\n      <th>total_vote<\/th>\n      <th>vote_margin<\/th>\n      <th>winner<\/th>\n      <th>party<\/th>\n      <th>pct_margin<\/th>\n      <th>r_points<\/th>\n      <th>d_points<\/th>\n      <th>pct_clinton<\/th>\n      <th>pct_trump<\/th>\n      <th>pct_johnson<\/th>\n      <th>pct_other<\/th>\n      <th>clinton_vote<\/th>\n      <th>trump_vote<\/th>\n      <th>johnson_vote<\/th>\n      <th>other_vote<\/th>\n      <th>ev_dem<\/th>\n      <th>ev_rep<\/th>\n      <th>ev_oth<\/th>\n      <th>census<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"scrollY":200,"scrollX":"100%","scrollCollase":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5,8,9,10,11,12,13,14,15,16,17,18,19,20,21]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[8,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+
+
+---
+### Merging Map Data with Data on Regional Attributes
+
+To merge the `election` dataset with the map data, `us_states`, we need a variable to serve as the identifier for joining the  rows of both datasets. The ID variable must be found in both datasets, although they can be named differently. 
+
+From the `election` and `us_states` datasets, the common variable is `state` in `election`  and `region` in `us_states`. 
+
+However, the names of the states are in title case in the `election` dataset but lower case in the `us_states` dataset. For example, R does not know that `alabama` and `Alabama` are the same thing.
+
+Thus, we need to convert the names of the states in the `election` dataset to lower case using the `tolower()` function, so that the names are consistent between `election` and `us_states`.
+
+The adjusted names of the states are saved as the `region` variable in the `election` dataset.
+
+
+```r
+election$region &lt;- tolower(election$state)  
+```
+
+
+---
+### Merging Map Data with Data on Regional Attributes
+
+To join `election` with `us_states`, we may now use `region` as the identifier. We will employ `left_join()`, where `left_join()` returns all rows from the first dataset, and all columns from the first and second datasets. 
+
+In other words, the `left_join()` function uses the left dataset as the master (i.e. no records will be dropped), and joins it with data from the right dataset. 
+
+.pull-left[ 
+Here, the left dataset is `us_states`. The combined dataset is saved as `us_states_elec`.
+
+Notice that we do not need to declare what the identifier is. Since `region` is the common variable across the two datasets, it will be recognized as the ID variable (otherwise, you will need to provide the "by" argument).
+]
+
+.pull-right[ 
+
+```r
+# region is the only common variable
+us_states_elec &lt;- left_join(us_states, election) # returns all rows from us_states, and all columns in both
+str(us_states_elec) # Notice the recycling property of R
+```
+
+```
+## 'data.frame':	15537 obs. of  28 variables:
+##  $ long        : num  -87.5 -87.5 -87.5 -87.5 -87.6 ...
+##  $ lat         : num  30.4 30.4 30.4 30.3 30.3 ...
+##  $ group       : num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ order       : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ region      : chr  "alabama" "alabama" "alabama" "alabama" ...
+##  $ subregion   : chr  NA NA NA NA ...
+##  $ state       : chr  "Alabama" "Alabama" "Alabama" "Alabama" ...
+##  $ st          : chr  "AL" "AL" "AL" "AL" ...
+##  $ fips        : num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ total_vote  : num  2123372 2123372 2123372 2123372 2123372 ...
+##  $ vote_margin : num  588708 588708 588708 588708 588708 ...
+##  $ winner      : chr  "Trump" "Trump" "Trump" "Trump" ...
+##  $ party       : chr  "Republican" "Republican" "Republican" "Republican" ...
+##  $ pct_margin  : num  0.277 0.277 0.277 0.277 0.277 ...
+##  $ r_points    : num  27.7 27.7 27.7 27.7 27.7 ...
+##  $ d_points    : num  -27.7 -27.7 -27.7 -27.7 -27.7 ...
+##  $ pct_clinton : num  34.4 34.4 34.4 34.4 34.4 ...
+##  $ pct_trump   : num  62.1 62.1 62.1 62.1 62.1 ...
+##  $ pct_johnson : num  2.09 2.09 2.09 2.09 2.09 2.09 2.09 2.09 2.09 2.09 ...
+##  $ pct_other   : num  1.46 1.46 1.46 1.46 1.46 1.46 1.46 1.46 1.46 1.46 ...
+##  $ clinton_vote: num  729547 729547 729547 729547 729547 ...
+##  $ trump_vote  : num  1318255 1318255 1318255 1318255 1318255 ...
+##  $ johnson_vote: num  44467 44467 44467 44467 44467 ...
+##  $ other_vote  : num  31103 31103 31103 31103 31103 ...
+##  $ ev_dem      : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ ev_rep      : num  9 9 9 9 9 9 9 9 9 9 ...
+##  $ ev_oth      : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ census      : chr  "South" "South" "South" "South" ...
+```
+]
+
+
+---
+### Categorical `fill` Aesthetic 
+
+Using a choropleth map, let's visualize the states that were won by the Democrats and Republicans. 
+
+The win/loss information is contained in `party`, which is a categorical variable with two classes: "Republican" or "Democrat" (whoever won). To visualize `party` on the US map, we employ `party` as a `fill` aesthetic.
+
+
+.pull-left[
+
+```r
+# The fill aesthetic makes a plain map a choropleth map.
+p &lt;- ggplot(data = us_states_elec,  
+            aes(x = long, y = lat,  group = group, fill = party))  
+
+p + geom_polygon(color = "gray90", size = 0.1) +  
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) 
+```
+]
+
+.pull-right[ 
+&lt;img src="ChoroplethMaps_files/figure-html/election.1-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Tidying Up 
+
+Let's tidy up the map by using the party colors and adding titles and axis labels.
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+party_colors &lt;- c("#2E74C0", "#CB454A") # Democrats and Republicatns colors
+
+p &lt;- ggplot(data = us_states_elec,  
+            mapping = aes(x = long, y = lat,  group = group, fill = party))  
+
+p + geom_polygon(color = "gray90", size = 0.1) +  
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) + 
+  scale_fill_manual(values = party_colors) +  # Change the colors of the fill aesthetic
+  labs(title = "Election Results 2016", fill = NULL) 
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="ChoroplethMaps_files/figure-html/election.2-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+
+---
+### Numerical `fill` Aesthetic 
+
+Instead of a categorical variable like `party`, we may use a numerical variable as a `fill` aesthetic. Let's show Donald Trump's winning percentage, contained in the variable `pct_trump`, on the US map. 
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = us_states_elec,  
+            mapping = aes(x = long, y = lat, group = group, fill = pct_trump))  
+
+p + geom_polygon(color = "gray90", size = 0.1) + # color is the color of the boundaries and size is the size of the lines
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45)  +
+  labs(title = "Trump vote", fill= "Percent") 
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="ChoroplethMaps_files/figure-html/election.3-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+
+---
+### Example: Visualizing Population Density by County
+
+In this example, let's visualize population data at the county level using a choropleth map. For this example, the map data for counties are already available as `county_map` when you load the `socviz` library.
+
+There is a variable named `id`, which is the county identification number.
+
+
+```r
+glimpse(county_map)
+```
+
+```
+## Rows: 191,382
+## Columns: 7
+## $ long  &lt;dbl&gt; 1225889, 1235324, 1244873, 1244129, 1272010, 1276797, 1273832, 1…
+## $ lat   &lt;dbl&gt; -1275020, -1274008, -1272331, -1267515, -1262889, -1295514, -129…
+## $ order &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 1…
+## $ hole  &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+## $ piece &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+## $ group &lt;fct&gt; 0500000US01001.1, 0500000US01001.1, 0500000US01001.1, 0500000US0…
+## $ id    &lt;chr&gt; "01001", "01001", "01001", "01001", "01001", "01001", "01001", "…
+```
+
+
+---
+### Data
+
+Let's use `county_data` from `socviz`, which contains a county identification variable (i.e. identifier) named `id`.
+
+
+```r
+glimpse(county_data)
+```
+
+```
+## Rows: 3,195
+## Columns: 32
+## $ id               &lt;chr&gt; "0", "01000", "01001", "01003", "01005", "01007", "01…
+## $ name             &lt;chr&gt; NA, "1", "Autauga County", "Baldwin County", "Barbour…
+## $ state            &lt;fct&gt; NA, AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, A…
+## $ census_region    &lt;fct&gt; NA, South, South, South, South, South, South, South, …
+## $ pop_dens         &lt;fct&gt; "[   50,  100)", "[   50,  100)", "[   50,  100)", "[…
+## $ pop_dens4        &lt;fct&gt; "[ 45,  118)", "[ 45,  118)", "[ 45,  118)", "[118,71…
+## $ pop_dens6        &lt;fct&gt; "[ 82,  215)", "[ 82,  215)", "[ 82,  215)", "[ 82,  …
+## $ pct_black        &lt;fct&gt; "[10.0,15.0)", "[25.0,50.0)", "[15.0,25.0)", "[ 5.0,1…
+## $ pop              &lt;int&gt; 318857056, 4849377, 55395, 200111, 26887, 22506, 5771…
+## $ female           &lt;dbl&gt; 50.8, 51.5, 51.5, 51.2, 46.5, 46.0, 50.6, 45.2, 53.4,…
+## $ white            &lt;dbl&gt; 77.7, 69.8, 78.1, 87.3, 50.2, 76.3, 96.0, 27.2, 54.3,…
+## $ black            &lt;dbl&gt; 13.2, 26.6, 18.4, 9.5, 47.6, 22.1, 1.8, 69.9, 43.6, 2…
+## $ travel_time      &lt;dbl&gt; 25.5, 24.2, 26.2, 25.9, 24.6, 27.6, 33.9, 26.9, 24.0,…
+## $ land_area        &lt;dbl&gt; 3531905.43, 50645.33, 594.44, 1589.78, 884.88, 622.58…
+## $ hh_income        &lt;int&gt; 53046, 43253, 53682, 50221, 32911, 36447, 44145, 3203…
+## $ su_gun4          &lt;fct&gt; NA, NA, "[11,54]", "[11,54]", "[ 5, 8)", "[11,54]", "…
+## $ su_gun6          &lt;fct&gt; NA, NA, "[10,12)", "[10,12)", "[ 7, 8)", "[10,12)", "…
+## $ fips             &lt;dbl&gt; 0, 1000, 1001, 1003, 1005, 1007, 1009, 1011, 1013, 10…
+## $ votes_dem_2016   &lt;int&gt; NA, NA, 5908, 18409, 4848, 1874, 2150, 3530, 3716, 13…
+## $ votes_gop_2016   &lt;int&gt; NA, NA, 18110, 72780, 5431, 6733, 22808, 1139, 4891, …
+## $ total_votes_2016 &lt;int&gt; NA, NA, 24661, 94090, 10390, 8748, 25384, 4701, 8685,…
+## $ per_dem_2016     &lt;dbl&gt; NA, NA, 0.23956855, 0.19565310, 0.46660250, 0.2142203…
+## $ per_gop_2016     &lt;dbl&gt; NA, NA, 0.7343579, 0.7735147, 0.5227141, 0.7696616, 0…
+## $ diff_2016        &lt;int&gt; NA, NA, 12202, 54371, 583, 4859, 20658, 2391, 1175, 1…
+## $ per_dem_2012     &lt;dbl&gt; NA, NA, 0.2657577, 0.2156657, 0.5125229, 0.2621857, 0…
+## $ per_gop_2012     &lt;dbl&gt; NA, NA, 0.7263374, 0.7738975, 0.4833755, 0.7306638, 0…
+## $ diff_2012        &lt;int&gt; NA, NA, 11012, 47443, 334, 3931, 17780, 2808, 714, 14…
+## $ winner           &lt;chr&gt; NA, NA, "Trump", "Trump", "Trump", "Trump", "Trump", …
+## $ partywinner16    &lt;chr&gt; NA, NA, "Republican", "Republican", "Republican", "Re…
+## $ winner12         &lt;chr&gt; NA, NA, "Romney", "Romney", "Obama", "Romney", "Romne…
+## $ partywinner12    &lt;chr&gt; NA, NA, "Republican", "Republican", "Democrat", "Repu…
+## $ flipped          &lt;chr&gt; NA, NA, "No", "No", "Yes", "No", "No", "No", "No", "N…
+```
+
+
+---
+### Merging Map and County Data
+
+Given that `county_map` and `county_data` have the common county identifier called `id`, we will merge these datasets by `id`. Note that the `by = "id"` option is not necessary, as `id` is contained in both datasets and there are no other variables with a common name.
+
+
+
+```r
+# by = "id" not necessary since id is the only common variable
+county_full &lt;- left_join(county_map, county_data, by = "id") 
+glimpse(county_full)
+```
+
+```
+## Rows: 191,382
+## Columns: 38
+## $ long             &lt;dbl&gt; 1225889, 1235324, 1244873, 1244129, 1272010, 1276797,…
+## $ lat              &lt;dbl&gt; -1275020, -1274008, -1272331, -1267515, -1262889, -12…
+## $ order            &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…
+## $ hole             &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…
+## $ piece            &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+## $ group            &lt;fct&gt; 0500000US01001.1, 0500000US01001.1, 0500000US01001.1,…
+## $ id               &lt;chr&gt; "01001", "01001", "01001", "01001", "01001", "01001",…
+## $ name             &lt;chr&gt; "Autauga County", "Autauga County", "Autauga County",…
+## $ state            &lt;fct&gt; AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, AL, A…
+## $ census_region    &lt;fct&gt; South, South, South, South, South, South, South, Sout…
+## $ pop_dens         &lt;fct&gt; "[   50,  100)", "[   50,  100)", "[   50,  100)", "[…
+## $ pop_dens4        &lt;fct&gt; "[ 45,  118)", "[ 45,  118)", "[ 45,  118)", "[ 45,  …
+## $ pop_dens6        &lt;fct&gt; "[ 82,  215)", "[ 82,  215)", "[ 82,  215)", "[ 82,  …
+## $ pct_black        &lt;fct&gt; "[15.0,25.0)", "[15.0,25.0)", "[15.0,25.0)", "[15.0,2…
+## $ pop              &lt;int&gt; 55395, 55395, 55395, 55395, 55395, 55395, 55395, 5539…
+## $ female           &lt;dbl&gt; 51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5,…
+## $ white            &lt;dbl&gt; 78.1, 78.1, 78.1, 78.1, 78.1, 78.1, 78.1, 78.1, 78.1,…
+## $ black            &lt;dbl&gt; 18.4, 18.4, 18.4, 18.4, 18.4, 18.4, 18.4, 18.4, 18.4,…
+## $ travel_time      &lt;dbl&gt; 26.2, 26.2, 26.2, 26.2, 26.2, 26.2, 26.2, 26.2, 26.2,…
+## $ land_area        &lt;dbl&gt; 594.44, 594.44, 594.44, 594.44, 594.44, 594.44, 594.4…
+## $ hh_income        &lt;int&gt; 53682, 53682, 53682, 53682, 53682, 53682, 53682, 5368…
+## $ su_gun4          &lt;fct&gt; "[11,54]", "[11,54]", "[11,54]", "[11,54]", "[11,54]"…
+## $ su_gun6          &lt;fct&gt; "[10,12)", "[10,12)", "[10,12)", "[10,12)", "[10,12)"…
+## $ fips             &lt;dbl&gt; 1001, 1001, 1001, 1001, 1001, 1001, 1001, 1001, 1001,…
+## $ votes_dem_2016   &lt;int&gt; 5908, 5908, 5908, 5908, 5908, 5908, 5908, 5908, 5908,…
+## $ votes_gop_2016   &lt;int&gt; 18110, 18110, 18110, 18110, 18110, 18110, 18110, 1811…
+## $ total_votes_2016 &lt;int&gt; 24661, 24661, 24661, 24661, 24661, 24661, 24661, 2466…
+## $ per_dem_2016     &lt;dbl&gt; 0.2395685, 0.2395685, 0.2395685, 0.2395685, 0.2395685…
+## $ per_gop_2016     &lt;dbl&gt; 0.7343579, 0.7343579, 0.7343579, 0.7343579, 0.7343579…
+## $ diff_2016        &lt;int&gt; 12202, 12202, 12202, 12202, 12202, 12202, 12202, 1220…
+## $ per_dem_2012     &lt;dbl&gt; 0.2657577, 0.2657577, 0.2657577, 0.2657577, 0.2657577…
+## $ per_gop_2012     &lt;dbl&gt; 0.7263374, 0.7263374, 0.7263374, 0.7263374, 0.7263374…
+## $ diff_2012        &lt;int&gt; 11012, 11012, 11012, 11012, 11012, 11012, 11012, 1101…
+## $ winner           &lt;chr&gt; "Trump", "Trump", "Trump", "Trump", "Trump", "Trump",…
+## $ partywinner16    &lt;chr&gt; "Republican", "Republican", "Republican", "Republican…
+## $ winner12         &lt;chr&gt; "Romney", "Romney", "Romney", "Romney", "Romney", "Ro…
+## $ partywinner12    &lt;chr&gt; "Republican", "Republican", "Republican", "Republican…
+## $ flipped          &lt;chr&gt; "No", "No", "No", "No", "No", "No", "No", "No", "No",…
+```
+
+
+---
+### Constructing a Choropleth Map 
+
+Note that `county_full$pop_dens` is a factor variable
+
+
+```r
+class(county_full$pop_dens)
+```
+
+```
+## [1] "factor"
+```
+
+```r
+summary(county_full$pop_dens)
+```
+
+```
+## [    0,   10) [   10,   50) [   50,  100) [  100,  500) [  500, 1000) 
+##         40507         60778         35235         37857          6787 
+## [ 1000, 5000) [ 5000,71672] 
+##          9232           986
+```
+
+To visualize population density, we employ `pop_dens` as a `fill` aesthetic. 
+
+---
+### Constructing a Choropleth Map 
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = county_full,  
+            mapping = aes(x = long, y = lat,  group = group, fill = pop_dens)) 
+
+p + geom_polygon(color = "gray90", size = 0.05) + 
+  coord_equal() + # `1:1 aspect for the figure 
+  labs(fill = "Population per\nsquare mile") +  
+  theme_map() +  
+  guides(fill = guide_legend(nrow = 1))  
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="ChoroplethMaps_files/figure-html/county.1-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+---
+### Constructing a Choropleth Map
+
+To tidy up, we change the scale of the `fill` aesthetic by using the `brewer` palette and changing the "fill" labels.
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+p &lt;- ggplot(data = county_full,  
+            mapping = aes(x = long, y = lat,  group = group, fill = pop_dens))  
+
+p + geom_polygon(color = "gray90", size = 0.05) + 
+  coord_equal() + # `1:1 aspect for the figure 
+  scale_fill_brewer(palette = "Blues",  
+                    labels = c("0-10", "10-50", "50-100", "100-500",  "500-1,000", "1,000-5,000", "&gt;5,000"))  +  # Specify levels
+  labs(fill = "Population per\nsquare mile") +  
+  theme_map() +  
+  guides(fill = guide_legend(nrow = 1))  
+
+ggsave("usdensity.png", dpi = 300)
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="ChoroplethMaps_files/figure-html/county.2-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+class: center, middle, inverse
+# Simple Features 
+
+---
+### Multipolygon
+
+We demonstrate how a choropleth map can be constructed from a `sf` (simple features) data frame.
+
+The `sf` data frame looks like a standard data frame. However, unlike the standard data frame, it contains a column called `geometry`, which contains an entry for each region (i.e. row) called `MULTIPOLYGON`. 
+
+`MULTIPOLYGON` is a collection of the longitudes and latitudes that trace the boundary of a region. The boundary of a region may not contiguous, e.g. if there are exclaves. 
+
+The `sf` data frame is easy to handle as we may just add a variable to a data frame like how we add a variable to a regular data frame.
+
+As an example, let's visualize ASEAN's GDP using a choropleth map. To obtain the national boundary lines for the ASEAN countries, we use the `rnaturalearth` package.
+
+
+```r
+library(rnaturalearth)
+```
+
+
+---
+### Merging Our Data
+
+The `rnaturalearth` package provides map data as an `sf` data frame (the default is a spatial points "sp" data frame).
+
+Below, we extract an `sf` data frame from `rnaturalearth` and save it as `asean.data`.
+
+
+```r
+# Choose a vector countries
+asean &lt;- c("Brunei", "Cambodia", "Indonesia", "Malaysia", "Myanmar", "Philippines","Singapore", "Thailand", "Vietnam") 
+
+# Get data from rnaturalearth
+asean.data &lt;- rnaturalearth::ne_countries(scale = "medium", type = "countries", country = asean, returnclass = "sf") # simple features
+# "ne_countries" stands for natural earth countries
+```
+
+---
+### Merging Data with a SF Data Frame
+
+Notice that `asean.data` is a simple features data frame, as shown below:
+
+
+```r
+class(asean.data)
+```
+
+```
+## [1] "sf"         "data.frame"
+```
+
+```r
+head(asean.data[,60:63])
+```
+
+```
+## Simple feature collection with 6 features and 4 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 92.17959 ymin: -10.90967 xmax: 140.9762 ymax: 28.51704
+## Geodetic CRS:  +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0
+##     long_len abbrev_len tiny homepart                       geometry
+## 34        17          6    2        1 MULTIPOLYGON (((115.0268 4....
+## 96         9          5   NA        1 MULTIPOLYGON (((122.9489 -1...
+## 115        8          5   NA        1 MULTIPOLYGON (((103.3178 10...
+## 144        7          5   NA        1 MULTIPOLYGON (((98.18262 9....
+## 153        8          6   NA        1 MULTIPOLYGON (((111.3893 2....
+## 171       11          5   NA        1 MULTIPOLYGON (((120.2504 5....
+```
+
+
+---
+### Merging Data with a SF Data Frame
+
+Let's add GDP per capita of the ASEAN countries, contained in `GDPPerCap.csv`, to the  `asean.data`. 
+
+.pull-left[ 
+To do so, we simply assign the values of GDP per capita as a new column in `asean.data`. 
+
+To be safe, it would be better to use `left_join()` as it will match both datasets using an identifier. Country names could be used as the identifier for joining the two datasets (try this as an exercise).
+]
+.pull-right[ 
+
+```r
+# Import GDP per Capita Data
+GDP.data &lt;- read.csv("GDPPerCap.csv",check.names=FALSE)
+
+# Arrange the countries in ascending order
+asean.data &lt;- arrange(asean.data, subunit) # 
+
+# Write the GDP data for 1993 and 2018 into asean.data (left_join is better)
+asean.data$GDPperCap1993 &lt;- GDP.data$'1993'
+asean.data$GDPperCap2018 &lt;- GDP.data$'2018'
+```
+]
+
+---
+### ASEAN GDP, 1993
+
+To visualize the GDP per capita of ASEAN countries spatially using an `sf` data frame, we employ `geom_sf()` and declare the 1993 GDP per capita as a `fill` aesthetic.
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+map1993 &lt;- ggplot() + 
+  geom_sf(data = asean.data, aes(fill = GDPperCap1993)) + 
+  scale_fill_gradient(low = "white", high = "black",  limits = c(0, 55000)) +
+  ggtitle("GDP Per Capita, 1993") + guides(fill = guide_legend(nrow = 1)) + 
+  theme_map() + theme(legend.title = element_blank())
+
+map1993 
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="ChoroplethMaps_files/figure-html/asean.1-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+
+---
+### ASEAN GDP, 2018
+
+Let's repeat the visualization for 2018 GDP per capita.
+
+.panelset[
+.panel[.panel-name[R Code]
+
+```r
+map2018 &lt;- ggplot()+
+  geom_sf(data = asean.data, aes(fill = GDPperCap2018)) + 
+  scale_fill_gradient(low = "white", high = "black",  limits = c(0, 55000)) +
+  ggtitle("GDP Per Capita, 2018") + 
+  guides(fill = guide_legend(nrow = 1)) + 
+  theme_map() + 
+  theme(legend.title = element_blank())
+
+map2018 
+```
+]
+
+.panel[.panel-name[Plot]
+&lt;img src="ChoroplethMaps_files/figure-html/asean.2-out-1.png" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+### Putting 1993 and 2008 Maps Together
+
+Let's stitch the plots together using `grid.arrange()`.
+
+
+```r
+grid.arrange(map1993, map2018, nrow = 1)
+```
+
+&lt;img src="ChoroplethMaps_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Exercise
+
+Let's construct a choropleth map to visualize life expectancy in Africa. First, install and load the `spData` package. We will be using the dataset `world`. Attempt the questions below.
+
+**1.** Using `filter()`, construct a (data) subset from `world` containing African countries only (i.e. filter based on the condition `continent == "Africa"`). Save this into the data frame named `africa`. What do you observe about the dataset?
+
+
+```
+## [1] "sf"         "tbl_df"     "tbl"        "data.frame"
+```
+
+---
+### Exercise
+
+**2.** Using `geom_sf()`, visualize `lifeExp` in Africa. To label the countries, pass `name_long` into `geom_sf_text()` as a label aesthetic. Use "red" as a color setting. 
+
+Use `theme_map()` from the `ggthemes` package. Tidy up the plots as much as you can and describe what you observe.
+
+&lt;img src="ChoroplethMaps_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Remark: Using `geom_text_repel()` to Label
+
+Note: `geom_sf_label()` or `geom_sf_text()` are the most straightforward way of adding text labels for `sf` objects. However, without the repel option, the map may look messy. 
+
+To label the countries the "traditional" way by applying `geom_text_repel()` on the centroids, we need to first obtain the centroids from the `sf` data frame. 
+
+This is achieved by passing the data frame into `st_centroid()`, and then `st_coordinates(geom)` to obtain the centroid coordinates. 
+
+---
+### Remark: Using `geom_text_repel()` to Label
+
+The process of obtaining the longitude and latitude of the centroids for each country is described below.
+
+
+```r
+africa.coord &lt;-  africa %&gt;% st_centroid() %&gt;% # generate the centroid, 
+  mutate(long = st_coordinates(geom)[,1], lat = st_coordinates(geom)[,2]) # get the coordinates from the centroid. This needs some inspection
+```
+
+---
+### Remark: Using `geom_text_repel()` to Label
+
+Once we have the centroids, we may use `geom_text_repel()` with the dataset `africa.coord`
+
+&lt;img src="ChoroplethMaps_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
