@@ -32,7 +32,7 @@ In this course, we employ R to construct data visualizations. The course introdu
   1. Data Preprocessing for Data Visualization
   1. Plotting Trends and Time Series: Line Charts, Area Charts, Path Plots [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
   1. Plotting Distributions : Bar Plots, Histograms, Kernel Density Plots [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/"> Seminar 4 </a>]
-  1. Plotting Distributions : Column Plots, Box Plots, Dot Plots, Jitter Plots, Tree Maps [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/"> Seminar 5 </a>]
+  1. Comparing Distributions : Column Plots, Box Plots, Dot Plots, Jitter Plots, Tree Maps [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/"> Seminar 5 </a>]
   1. Plotting Geospatial Data: Choropleth Maps [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/"> Seminar 5 </a>]
 
 **Other Topics**
