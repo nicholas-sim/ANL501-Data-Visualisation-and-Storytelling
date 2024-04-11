@@ -5,7 +5,7 @@ The seminar will build upon previous discussions on _ggplots_ and explore approa
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/timeseriesplots">  Time Series Plots </a>
 
-Time series data, where observations are recorded over successive time intervals, are frequently contained as part of longitudinal data. Examples range from macroeconomic indicators spanning multiple countries across time to stock prices of companies within a specific industry over a designated timeframe. We explore various methods for plotting time trends using _ggplot_ where the time series are extracted from longitudinal data. We also focus on implementing the correct approach for comparing time trends across various cross-sectional units, and explore data storytelling elements such as employing color differentiation for time series and time series labeling.
+Time series data, where observations are recorded over successive time intervals, are frequently contained as part of longitudinal data. Examples range from macroeconomic indicators spanning multiple countries across time to stock prices of companies within a specific industry over a designated timeframe. We explore various methods for plotting time trends using _ggplot_ where the time series are extracted from longitudinal data. We also focus on implementing the correct approach for comparing time trends across various cross-sectional units, and explore data storytelling elements such as employing color differentiation and labeling for time series plots.
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/barchartshistogramsdensities">  Bar Charts, Histograms, and Densities </a>
 
