@@ -13,4 +13,4 @@ Distribution plots visually represent the distribution of variable values. They 
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_4/rmarkdown"> Introduction to RMarkdown </a>
 
-RMarkdown is a markdown format document in RStudio. It is integrated with R's data analysis capabilities and facilitates seamless incorporation of data analysis into reports. RMarkdown enables the generation of reports in multiple formats, including Word, HTML, and PDF, and presentations in Powerpoint, HTML and PDF (Beamer). This discussion explores the process of creating a reproducible report with data analysis using RMarkdown.
+RMarkdown is a markdown format document in RStudio. It is integrated with R's data analysis capabilities and facilitates seamless incorporation of data analysis into reports. RMarkdown enables the generation of reports in multiple formats, including Word, HTML, and PDF, and presentations in Powerpoint, HTML and PDF (Beamer). This discussion explores the process of creating a reproducible report with data analysis, as well as a brief discussion on integrating Python with R using RMarkdown. 
