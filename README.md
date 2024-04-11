@@ -10,7 +10,7 @@ Data Scraping from Wiki using Reticulate    |  Lollipop Chart on Life Expectancy
 ![](islands.png) |   ![](lifeexpectancy.png)
 
 
-In this course, we explore the use of R programming to construct data visualizations. The course follows <a href=["https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/](https://socviz.co/)"> Data Visualization: A Practical Introduction </a> by Kieran Healy and the course introduction can be found here [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]. While no prerequisites are required, some exposure to programming would be beneficial for students. Nevertheless, before going into data visualizations, we will introduce R and ensure everyone is proficient in working with and manipulating data frames with it. The course is structured into the following sections:
+In this course, we explore the use of R programming to construct data visualizations. The course follows <a href="https://socviz.co/"> Data Visualization: A Practical Introduction </a> by Kieran Healy and the course introduction can be found here [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]. While no prerequisites are required, some exposure to programming would be beneficial for students. Nevertheless, before going into data visualizations, we will introduce R and ensure everyone is proficient in working with and manipulating data frames with it. The course is structured into the following sections:
 
 
 **Introduction to R Programming**
