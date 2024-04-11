@@ -2,7 +2,7 @@
 ><p style="font-size: 12px; color: brown;">"<em> A most gruesome and nerve-racking assignment to finish as my last module with SUSS in exchange for the master's certificate </em>"  </p>
 
 
-This repository contains the class materials for ANL501 Data Visualisation and Storytelling, a course offered by the Master of Analytics and Visualisation (MAVI) programme at SUSS. Thanks to all current and past students whose feedback has contributed to the improving them.
+This repository contains the class materials for ANL501 Data Visualisation and Storytelling, a course offered by the Master of Analytics and Visualisation (MAVI) programme at SUSS. Thanks to all current and past students whose feedback has contributed to improving the course.
 
 
 Data Scraping from Wiki using Reticulate    |  Lollipop Chart on Life Expectancy
