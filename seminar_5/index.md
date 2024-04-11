@@ -4,8 +4,8 @@ This seminar first discusses the importance of data preprocessing for data visua
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/columnplotdatapreprocessing">  Column Plot and Data Processing </a>
 
-Table data are data summarized in a table. This discussion explores how table data can be constructed using a column plot. It then illustrates the importance of data preprocessing to obtain certain bar charts that cannot be constructed by direct application of standard _ggplot_ functions. Finally, we continue to explore the importance of data preprocessing, especially how to achieve certain visualizations by first employing feature engineering and data reshaping. 
 
+Table data consists of summarized information presented in tabular format. This discussion delves into visualizing table data through column plots. It explores how bar charts with specific bar placements, which cannot be directly achieved using standard ggplot functions, can be created by first preprocessing the raw data into a table format and then utilizing the column plot for construction. Additionally, it underscores the importance of data preprocessing, especially in achieving specific visualizations through feature engineering and data reshaping. Finally, the discussion concludes with an overview of integrating Python libraries into R using the `reticulate` package.
 
 <a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/plottingdistributionsboxplots">  Plotting Distributions for Comparisons: Boxplots, Dotplots and Tree Maps </a>
 
