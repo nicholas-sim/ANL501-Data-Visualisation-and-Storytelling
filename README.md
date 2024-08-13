@@ -19,7 +19,7 @@ In this course, we explore the use of R programming to construct data visualizat
   1. R Programming [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_1/"> Seminar 1 </a>]
   1. Data Management in Base R [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a>]
   1. Data Management in Tidyverse  [<a href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_2/"> Seminar 2 </a>]
-  2. 
+     
 
 **Data Storytelling Principles**
 
