@@ -12,7 +12,7 @@ Table data consists of summarized information presented in tabular format. This 
 This discussion focuses on data visualizations that compare distributions across groups. These visualizations include boxplots, which provide visualizations of key summary statistics of a numerical variable, dotplots and jitter plots, which employ points to show incidences of a variable, among others. The discussion concludes with a brief discussion of treemaps, which are useful for showing the rankings or hierarchical structures of attributes within a variable.
 
 
-<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/labelsandannotation"> Improving Data Storytelling: Labels and Annotations </a>
+<a style="font-weight:bold"  href="https://nicholas-sim.github.io/ANL501-Data-Visualisation-and-Storytelling/seminar_5/labelsandannotations"> Improving Data Storytelling: Labels and Annotations </a>
 
 Labels and annotations can be used to clarify certain features in a data visualization. For instance, labels can be used to identify important points in a scatter plot, while annotations can be used to mark areas corresponding to recessionary periods in time series plot, or as text to highlight important events captured by a data visualization. We explore how labels and annotations can be included to strengthen the data storytelling elements in data visualizations.
 
